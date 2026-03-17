@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Noir Velvet Blazer — MAISON LUMIÈRE</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Raleway:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --cream:#F5F0E8;--ivory:#FDFBF7;--gold:#B8975A;--gold-light:#D4B07A;--charcoal:#1A1A1A;--mid:#4A4A4A;--light-gray:#E8E4DC; }
+  * { margin:0;padding:0;box-sizing:border-box; }
+  body { background:var(--ivory);color:var(--charcoal);font-family:'Raleway',sans-serif;font-weight:300;overflow-x:hidden; }
+
+  nav { position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.5rem 4rem;background:rgba(253,251,247,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(184,151,90,0.15); }
+  .nav-logo { font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;letter-spacing:0.25em;color:var(--charcoal);text-decoration:none; }
+  .nav-logo span { color:var(--gold); }
+  .nav-links { display:flex;gap:2.5rem;list-style:none; }
+  .nav-links a { text-decoration:none;color:var(--mid);font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;transition:color 0.3s; }
+  .nav-links a:hover { color:var(--gold); }
+  .nav-icons { display:flex;gap:1.5rem;align-items:center; }
+  .nav-icons a { text-decoration:none;color:var(--mid);font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;transition:color 0.3s;position:relative; }
+  .nav-icons a:hover { color:var(--gold); }
+  .cart-badge { position:absolute;top:-8px;right:-12px;background:var(--gold);color:white;border-radius:50%;width:16px;height:16px;font-size:0.55rem;display:flex;align-items:center;justify-content:center; }
+
+  /* BREADCRUMB */
+  .breadcrumb-bar { padding: 6rem 4rem 0; }
+  .breadcrumb { font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid); }
+  .breadcrumb a { color:var(--gold);text-decoration:none; }
+  .breadcrumb span { margin:0 0.5rem; }
+
+  /* PRODUCT DETAIL */
+  .product-detail { display:grid;grid-template-columns:1fr 1fr;gap:5rem;padding:3rem 4rem 6rem;min-height:80vh; }
+
+  /* IMAGE SECTION */
+  .img-section { position:sticky;top:100px;height:fit-content; }
+  .main-img { position:relative;padding-top:120%;background:linear-gradient(135deg,#2C201A 0%,#1A1410 50%,#241810 100%);overflow:hidden;margin-bottom:1rem; }
+  .main-img-tag { position:absolute;top:1.5rem;left:1.5rem;background:var(--gold);color:white;font-size:0.55rem;letter-spacing:0.25em;text-transform:uppercase;padding:0.4rem 0.8rem; }
+  .main-img-wish { position:absolute;top:1.5rem;right:1.5rem;width:42px;height:42px;background:white;border:none;border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all 0.3s; }
+  .main-img-wish:hover { background:var(--gold);color:white; }
+  .main-img-label { position:absolute;bottom:0;left:0;right:0;padding:2rem;background:linear-gradient(transparent,rgba(0,0,0,0.5)); }
+  .img-thumb-row { display:flex;gap:0.8rem; }
+  .img-thumb { flex:1;padding-top:25%;position:relative;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:border-color 0.3s; }
+  .img-thumb.active { border-color:var(--gold); }
+  .img-thumb:hover { border-color:var(--gold-light); }
+  .img-thumb div { position:absolute;inset:0; }
+  .it1 { background:linear-gradient(160deg,#2C201A,#1A1410); }
+  .it2 { background:linear-gradient(160deg,#3D2B1F,#2C2018); }
+  .it3 { background:linear-gradient(160deg,#241C14,#1A1208); }
+  .it4 { background:linear-gradient(160deg,#1A1814,#0E0C0A); }
+
+  /* PRODUCT INFO */
+  .product-info { padding-top: 1rem; }
+  .brand-tag { font-size:0.6rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem; }
+  .product-title { font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,3.5vw,3.5rem);font-weight:300;line-height:1.1;margin-bottom:0.8rem; }
+  .product-sub { font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);margin-bottom:1.5rem; }
+  .rating-row { display:flex;align-items:center;gap:1rem;margin-bottom:2rem; }
+  .stars { display:flex;gap:0.2rem; }
+  .star { color:var(--gold);font-size:0.8rem; }
+  .rating-count { font-size:0.7rem;color:var(--mid);letter-spacing:0.05em; }
+  .price-row { display:flex;align-items:baseline;gap:1rem;margin-bottom:0.5rem; }
+  .price-main { font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:300;color:var(--charcoal); }
+  .price-original { font-size:1.2rem;color:var(--mid);text-decoration:line-through; }
+  .price-badge { background:rgba(139,68,68,0.1);color:#8B4444;border:1px solid rgba(139,68,68,0.2);padding:0.3rem 0.8rem;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase; }
+  .price-emi { font-size:0.7rem;color:var(--mid);margin-bottom:2rem;letter-spacing:0.05em; }
+  .price-emi strong { color:var(--gold); }
+  .divider { width:100%;height:1px;background:var(--light-gray);margin:1.8rem 0; }
+
+  /* COLOR */
+  .option-label { font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--charcoal);margin-bottom:1rem; }
+  .option-val { color:var(--gold); }
+  .color-row { display:flex;gap:0.8rem;margin-bottom:2rem; }
+  .color-swatch { width:32px;height:32px;border-radius:50%;cursor:pointer;position:relative;transition:transform 0.2s; }
+  .color-swatch:hover { transform:scale(1.1); }
+  .color-swatch.active::after { content:'';position:absolute;inset:-4px;border:1px solid var(--gold);border-radius:50%; }
+
+  /* SIZE */
+  .size-row { display:flex;gap:0.7rem;margin-bottom:0.8rem;flex-wrap:wrap; }
+  .size-btn { padding:0.7rem 1.2rem;border:1px solid var(--light-gray);background:transparent;font-family:'Raleway',sans-serif;font-size:0.7rem;letter-spacing:0.1em;cursor:pointer;transition:all 0.3s;color:var(--mid); }
+  .size-btn:hover,.size-btn.active { border-color:var(--gold);color:var(--gold);background:rgba(184,151,90,0.05); }
+  .size-btn.unavail { opacity:0.3;cursor:not-allowed;text-decoration:line-through; }
+  .size-guide-link { font-size:0.65rem;letter-spacing:0.15em;color:var(--gold);text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;margin-bottom:2rem; }
+
+  /* QTY & CART */
+  .qty-cart-row { display:flex;gap:1rem;margin-bottom:1.5rem; }
+  .qty-control { display:flex;align-items:center;border:1px solid var(--light-gray); }
+  .qty-btn { width:44px;height:56px;border:none;background:transparent;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;color:var(--charcoal); }
+  .qty-btn:hover { background:var(--cream); }
+  .qty-num { width:50px;text-align:center;font-size:0.9rem;border:none;background:transparent;font-family:'Raleway',sans-serif; }
+  .btn-cart { flex:1;padding:1.1rem;background:var(--charcoal);color:white;border:none;font-family:'Raleway',sans-serif;font-size:0.7rem;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.4s;position:relative;overflow:hidden; }
+  .btn-cart::before { content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:var(--gold);transition:left 0.4s; }
+  .btn-cart:hover::before { left:0; }
+  .btn-cart span { position:relative;z-index:1; }
+  .btn-wishlist { width:56px;height:56px;border:1px solid var(--light-gray);background:transparent;font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s;color:var(--mid); }
+  .btn-wishlist:hover { border-color:var(--gold);color:var(--gold); }
+  .checkout-link { display:block;text-align:center;padding:1.1rem;border:1px solid var(--charcoal);color:var(--charcoal);text-decoration:none;font-size:0.7rem;letter-spacing:0.25em;text-transform:uppercase;transition:all 0.4s;margin-bottom:2rem; }
+  .checkout-link:hover { background:var(--charcoal);color:white; }
+
+  /* TRUST BADGES */
+  .trust-badges { display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem; }
+  .trust-item { text-align:center;padding:1.2rem 0.8rem;background:var(--cream); }
+  .trust-icon { font-size:1.3rem;margin-bottom:0.5rem; }
+  .trust-label { font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid); }
+
+  /* ACCORDION */
+  .accordion { border-top:1px solid var(--light-gray); }
+  .acc-item { border-bottom:1px solid var(--light-gray); }
+  .acc-header { padding:1.2rem 0;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--charcoal); }
+  .acc-arrow { transition:transform 0.3s;color:var(--gold); }
+  .acc-item.open .acc-arrow { transform:rotate(180deg); }
+  .acc-body { max-height:0;overflow:hidden;transition:max-height 0.4s ease; }
+  .acc-item.open .acc-body { max-height:400px; }
+  .acc-content { padding:0 0 1.5rem;font-size:0.78rem;line-height:2;color:var(--mid); }
+  .acc-content ul { padding-left:1.2rem; }
+  .acc-content li { margin-bottom:0.4rem; }
+
+  /* RELATED */
+  .related { padding:5rem 4rem;background:var(--cream); }
+  .section-header { text-align:center;margin-bottom:4rem; }
+  .section-eyebrow { font-size:0.65rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem; }
+  .section-title { font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,3vw,3rem);font-weight:300; }
+  .section-title em { font-style:italic; }
+  .gold-line { width:60px;height:1px;background:var(--gold);margin:0 auto 1.5rem; }
+  .related-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:2rem; }
+  .rc { cursor:pointer; }
+  .rc-img { padding-top:125%;position:relative;overflow:hidden;margin-bottom:1rem; }
+  .rc-bg { position:absolute;inset:0;transition:transform 0.6s; }
+  .rc:hover .rc-bg { transform:scale(1.05); }
+  .rc-name { font-family:'Cormorant Garamond',serif;font-size:1.1rem;margin-bottom:0.3rem; }
+  .rc-price { font-size:0.85rem;color:var(--gold); }
+
+  a { color:inherit; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">MAISON <span>LUMIÈRE</span></a>
+  <ul class="nav-links">
+    <li><a href="products.html">Collections</a></li>
+    <li><a href="products.html">New Arrivals</a></li>
+    <li><a href="products.html">Sale</a></li>
+    <li><a href="#">Lookbook</a></li>
+    <li><a href="#">About</a></li>
+  </ul>
+  <div class="nav-icons">
+    <a href="#">Search</a>
+    <a href="cart.html" style="position:relative;">Cart <span class="cart-badge">2</span></a>
+  </div>
+</nav>
+
+<div class="breadcrumb-bar">
+  <p class="breadcrumb"><a href="index.html">Home</a><span>›</span><a href="products.html">Collections</a><span>›</span>Noir Velvet Blazer</p>
+</div>
+
+<!-- PRODUCT DETAIL -->
+<div class="product-detail">
+  <!-- IMAGES -->
+  <div class="img-section">
+    <div class="main-img" id="mainImg">
+      <div class="main-img-tag">New Arrival</div>
+      <button class="main-img-wish" id="wishBtn" onclick="toggleWish()">♡</button>
+    </div>
+    <div class="img-thumb-row">
+      <div class="img-thumb active" onclick="selectThumb(this, 0)"><div class="it1"></div></div>
+      <div class="img-thumb" onclick="selectThumb(this, 1)"><div class="it2"></div></div>
+      <div class="img-thumb" onclick="selectThumb(this, 2)"><div class="it3"></div></div>
+      <div class="img-thumb" onclick="selectThumb(this, 3)"><div class="it4"></div></div>
+    </div>
+  </div>
+
+  <!-- INFO -->
+  <div class="product-info">
+    <p class="brand-tag">Maison Lumière · Women's Fashion</p>
+    <h1 class="product-title">Noir Velvet<br>Blazer</h1>
+    <p class="product-sub">Structured · Peak Lapel · Padded Shoulders</p>
+    <div class="rating-row">
+      <div class="stars">
+        <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+      </div>
+      <span class="rating-count">4.9 (128 reviews)</span>
+    </div>
+    <div class="price-row">
+      <span class="price-main">₹24,500</span>
+      <span class="price-original">₹32,000</span>
+      <span class="price-badge">23% Off</span>
+    </div>
+    <p class="price-emi">or <strong>₹2,041/month</strong> with 0% EMI · 6, 12, 18 month options</p>
+    <div class="divider"></div>
+
+    <!-- COLOUR -->
+    <p class="option-label">Colour: <span class="option-val" id="colorName">Midnight Black</span></p>
+    <div class="color-row">
+      <div class="color-swatch active" style="background:#1A1A1A;" onclick="selectColor(this,'Midnight Black')"></div>
+      <div class="color-swatch" style="background:#2C3E50;" onclick="selectColor(this,'Midnight Navy')"></div>
+      <div class="color-swatch" style="background:#4A3D5C;" onclick="selectColor(this,'Deep Plum')"></div>
+      <div class="color-swatch" style="background:#2D2015;" onclick="selectColor(this,'Cognac Brown')"></div>
+    </div>
+
+    <!-- SIZE -->
+    <p class="option-label">Size: <span class="option-val" id="sizeName">Select</span></p>
+    <div class="size-row">
+      <button class="size-btn unavail">XS</button>
+      <button class="size-btn" onclick="selectSize(this,'S')">S</button>
+      <button class="size-btn active" onclick="selectSize(this,'M')">M</button>
+      <button class="size-btn" onclick="selectSize(this,'L')">L</button>
+      <button class="size-btn" onclick="selectSize(this,'XL')">XL</button>
+    </div>
+    <a href="#" class="size-guide-link">📏 Size Guide & Fit Details</a>
+
+    <!-- QTY + CART -->
+    <div class="qty-cart-row">
+      <div class="qty-control">
+        <button class="qty-btn" onclick="changeQty(-1)">−</button>
+        <input class="qty-num" id="qty" type="text" value="1" readonly>
+        <button class="qty-btn" onclick="changeQty(1)">+</button>
+      </div>
+      <button class="btn-cart" onclick="addToCart()"><span>Add to Cart</span></button>
+      <button class="btn-wishlist">♡</button>
+    </div>
+    <a href="checkout.html" class="checkout-link">Buy Now — Express Checkout</a>
+
+    <!-- TRUST -->
+    <div class="trust-badges">
+      <div class="trust-item"><div class="trust-icon">🚚</div><div class="trust-label">Free Delivery</div></div>
+      <div class="trust-item"><div class="trust-icon">↩️</div><div class="trust-label">30-Day Returns</div></div>
+      <div class="trust-item"><div class="trust-icon">🏆</div><div class="trust-label">Authentic</div></div>
+    </div>
+    <div class="divider"></div>
+
+    <!-- ACCORDION -->
+    <div class="accordion">
+      <div class="acc-item open">
+        <div class="acc-header" onclick="toggleAcc(this)">
+          Description <span class="acc-arrow">▾</span>
+        </div>
+        <div class="acc-body">
+          <div class="acc-content">A masterpiece of tailoring, our Noir Velvet Blazer is constructed from sumptuous Italian velvet with a structured silhouette that commands attention. The peak lapel and padded shoulders are a nod to power dressing, reimagined for the modern woman. Lined in pure silk for all-day comfort.<br><br>Pair with wide-leg trousers for the boardroom or over a slip dress for evening.</div>
+        </div>
+      </div>
+      <div class="acc-item">
+        <div class="acc-header" onclick="toggleAcc(this)">
+          Materials & Care <span class="acc-arrow">▾</span>
+        </div>
+        <div class="acc-body">
+          <div class="acc-content">
+            <ul>
+              <li>Outer: 100% Italian Velvet (Cotton-Silk blend)</li>
+              <li>Lining: 100% Mulberry Silk</li>
+              <li>Dry clean only</li>
+              <li>Store hanging to preserve shape</li>
+              <li>Avoid prolonged exposure to direct sunlight</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="acc-item">
+        <div class="acc-header" onclick="toggleAcc(this)">
+          Shipping & Returns <span class="acc-arrow">▾</span>
+        </div>
+        <div class="acc-body">
+          <div class="acc-content">
+            <ul>
+              <li>Free standard delivery (3–5 business days)</li>
+              <li>Express delivery available (1–2 days)</li>
+              <li>Free returns within 30 days, unworn with tags</li>
+              <li>Complimentary garment bag included</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RELATED PRODUCTS -->
+<section class="related">
+  <div class="section-header">
+    <p class="section-eyebrow">Complete the Look</p>
+    <div class="gold-line"></div>
+    <h2 class="section-title">You May Also <em>Love</em></h2>
+  </div>
+  <div class="related-grid">
+    <div class="rc" onclick="window.location='product.html'">
+      <div class="rc-img"><div class="rc-bg" style="background:linear-gradient(135deg,#D4C8B8,#C0B0A0)"></div></div>
+      <p class="rc-name">Cashmere Wide Trousers</p><p class="rc-price">₹19,800</p>
+    </div>
+    <div class="rc" onclick="window.location='product.html'">
+      <div class="rc-img"><div class="rc-bg" style="background:linear-gradient(135deg,#1E2418,#141A10)"></div></div>
+      <p class="rc-name">Silk Camisole Top</p><p class="rc-price">₹9,400</p>
+    </div>
+    <div class="rc" onclick="window.location='product.html'">
+      <div class="rc-img"><div class="rc-bg" style="background:linear-gradient(135deg,#2C3E50,#1C2C3A)"></div></div>
+      <p class="rc-name">Leather Belt — Gold</p><p class="rc-price">₹6,800</p>
+    </div>
+    <div class="rc" onclick="window.location='product.html'">
+      <div class="rc-img"><div class="rc-bg" style="background:linear-gradient(135deg,#C8C0B8,#B0A898)"></div></div>
+      <p class="rc-name">Pearl Drop Earrings</p><p class="rc-price">₹12,500</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  let qty = 1;
+  let wished = false;
+
+  function changeQty(d) {
+    qty = Math.max(1, qty + d);
+    document.getElementById('qty').value = qty;
+  }
+
+  function toggleWish() {
+    wished = !wished;
+    document.getElementById('wishBtn').textContent = wished ? '♥' : '♡';
+    document.getElementById('wishBtn').style.color = wished ? '#B8975A' : '';
+  }
+
+  function selectColor(el, name) {
+    document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('colorName').textContent = name;
+  }
+
+  function selectSize(el, name) {
+    document.querySelectorAll('.size-btn:not(.unavail)').forEach(s => s.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('sizeName').textContent = name;
+  }
+
+  function addToCart() {
+    const btn = document.querySelector('.btn-cart span');
+    btn.textContent = 'Added ✓';
+    document.querySelector('.cart-badge').textContent = '3';
+    setTimeout(() => btn.textContent = 'Add to Cart', 2000);
+  }
+
+  function toggleAcc(header) {
+    const item = header.parentElement;
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.acc-item').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+  }
+
+  function selectThumb(el, idx) {
+    document.querySelectorAll('.img-thumb').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    const bgs = ['linear-gradient(135deg,#2C201A,#1A1410)', 'linear-gradient(135deg,#3D2B1F,#2C2018)', 'linear-gradient(135deg,#241C14,#1A1208)', 'linear-gradient(135deg,#1A1814,#0E0C0A)'];
+    document.getElementById('mainImg').style.background = bgs[idx];
+  }
+</script>
+</body>
+</html>
