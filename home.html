@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAISON LUMIÈRE — Luxury Fashion</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Raleway:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F5F0E8;
+    --ivory: #FDFBF7;
+    --gold: #B8975A;
+    --gold-light: #D4B07A;
+    --charcoal: #1A1A1A;
+    --mid: #4A4A4A;
+    --light-gray: #E8E4DC;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--ivory); color: var(--charcoal); font-family: 'Raleway', sans-serif; font-weight: 300; overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.5rem 4rem;
+    background: rgba(253,251,247,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(184,151,90,0.15);
+    transition: all 0.4s;
+  }
+  .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 300; letter-spacing: 0.25em; color: var(--charcoal); text-decoration: none; }
+  .nav-logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--mid); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; transition: color 0.3s; }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-icons { display: flex; gap: 1.5rem; align-items: center; }
+  .nav-icons a { text-decoration: none; color: var(--mid); font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; transition: color 0.3s; position: relative; }
+  .nav-icons a:hover { color: var(--gold); }
+  .cart-badge {
+    position: absolute; top: -8px; right: -12px;
+    background: var(--gold); color: white; border-radius: 50%;
+    width: 16px; height: 16px; font-size: 0.55rem; display: flex; align-items: center; justify-content: center;
+  }
+
+  /* HERO */
+  .hero {
+    height: 100vh; display: grid; grid-template-columns: 1fr 1fr;
+    padding-top: 0; position: relative; overflow: hidden;
+  }
+  .hero-left {
+    background: var(--cream); display: flex; flex-direction: column;
+    justify-content: center; padding: 8rem 5rem 4rem;
+    position: relative;
+  }
+  .hero-left::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23B8975A' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.5;
+  }
+  .hero-eyebrow { font-size: 0.65rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; animation: fadeUp 1s 0.2s both; }
+  .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(3.5rem, 6vw, 6rem); font-weight: 300; line-height: 1.05; color: var(--charcoal); margin-bottom: 2rem; animation: fadeUp 1s 0.4s both; }
+  .hero-title em { font-style: italic; color: var(--gold); }
+  .hero-sub { font-size: 0.8rem; letter-spacing: 0.15em; line-height: 2; color: var(--mid); max-width: 340px; margin-bottom: 3rem; animation: fadeUp 1s 0.6s both; }
+  .btn-primary {
+    display: inline-block; padding: 1.1rem 3rem; background: var(--charcoal);
+    color: var(--ivory); font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
+    text-decoration: none; transition: all 0.4s; position: relative; overflow: hidden;
+    animation: fadeUp 1s 0.8s both;
+  }
+  .btn-primary::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: var(--gold); transition: left 0.4s; }
+  .btn-primary:hover::before { left: 0; }
+  .btn-primary span { position: relative; z-index: 1; }
+  .btn-ghost {
+    display: inline-block; padding: 1.1rem 3rem; border: 1px solid var(--charcoal);
+    color: var(--charcoal); font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
+    text-decoration: none; transition: all 0.4s; margin-left: 1rem;
+    animation: fadeUp 1s 0.9s both;
+  }
+  .btn-ghost:hover { background: var(--charcoal); color: var(--ivory); }
+  .hero-right {
+    position: relative; overflow: hidden;
+    background: linear-gradient(135deg, #2C2420 0%, #1A1A1A 50%, #2C2016 100%);
+  }
+  .hero-img-grid {
+    position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 2px;
+  }
+  .hero-img-cell { background: var(--charcoal); overflow: hidden; }
+  .hero-img-cell:nth-child(1) { background: linear-gradient(160deg, #3D2B1F 0%, #2A1E18 100%); }
+  .hero-img-cell:nth-child(2) { background: linear-gradient(160deg, #1E2A1E 0%, #141E14 100%); grid-row: span 2; }
+  .hero-img-cell:nth-child(3) { background: linear-gradient(160deg, #2A2215 0%, #1E1A10 100%); }
+  .hero-overlay {
+    position: absolute; bottom: 3rem; left: 3rem; right: 3rem;
+    display: flex; justify-content: space-between; align-items: flex-end;
+  }
+  .hero-stat { text-align: center; color: rgba(255,255,255,0.7); }
+  .hero-stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 300; color: var(--gold-light); display: block; }
+  .hero-stat-label { font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; }
+  .hero-fashion-label {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 4rem);
+    font-style: italic; color: rgba(212,176,122,0.3); text-align: center; white-space: nowrap;
+    letter-spacing: 0.1em; pointer-events: none;
+  }
+
+  /* MARQUEE */
+  .marquee-wrap { background: var(--charcoal); padding: 1rem 0; overflow: hidden; }
+  .marquee { display: flex; gap: 0; animation: marquee 25s linear infinite; white-space: nowrap; }
+  .marquee-item { font-size: 0.6rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); padding: 0 3rem; }
+  .marquee-dot { color: rgba(184,151,90,0.4); }
+
+  /* CATEGORIES */
+  .categories { padding: 8rem 4rem; }
+  .section-header { text-align: center; margin-bottom: 5rem; }
+  .section-eyebrow { font-size: 0.65rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+  .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 4vw, 4rem); font-weight: 300; color: var(--charcoal); }
+  .section-title em { font-style: italic; }
+  .cat-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: auto auto; gap: 1.5rem; }
+  .cat-card { position: relative; overflow: hidden; cursor: pointer; }
+  .cat-card:nth-child(1) { grid-row: span 2; }
+  .cat-card-inner { padding-top: 130%; position: relative; }
+  .cat-card:nth-child(1) .cat-card-inner { padding-top: 65%; }
+  .cat-card:nth-child(n+2) .cat-card-inner { padding-top: 90%; }
+  .cat-bg { position: absolute; inset: 0; transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+  .cat-card:hover .cat-bg { transform: scale(1.06); }
+  .cat-card:nth-child(1) .cat-bg { background: linear-gradient(160deg, #2C1F1A 20%, #3D2B1F 60%, #2A1810 100%); }
+  .cat-card:nth-child(2) .cat-bg { background: linear-gradient(160deg, #1A2020 0%, #0D1515 100%); }
+  .cat-card:nth-child(3) .cat-bg { background: linear-gradient(160deg, #201A14 0%, #151008 100%); }
+  .cat-card:nth-child(4) .cat-bg { background: linear-gradient(160deg, #181820 0%, #0D0D15 100%); }
+  .cat-card:nth-child(5) .cat-bg { background: linear-gradient(160deg, #1A1818 0%, #0F0D0D 100%); }
+  .cat-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 2.5rem 2rem; background: linear-gradient(transparent, rgba(0,0,0,0.75)); }
+  .cat-name { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; color: white; margin-bottom: 0.3rem; }
+  .cat-count { font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold-light); }
+  .cat-arrow { position: absolute; top: 1.5rem; right: 1.5rem; width: 36px; height: 36px; border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.9rem; opacity: 0; transform: scale(0.8); transition: all 0.3s; }
+  .cat-card:hover .cat-arrow { opacity: 1; transform: scale(1); }
+
+  /* FEATURED PRODUCTS */
+  .featured { padding: 6rem 4rem; background: var(--cream); }
+  .products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+  .product-card { cursor: pointer; }
+  .product-img { position: relative; overflow: hidden; margin-bottom: 1.2rem; }
+  .product-img-inner { padding-top: 125%; position: relative; }
+  .product-bg { position: absolute; inset: 0; transition: transform 0.6s ease; }
+  .product-card:hover .product-bg { transform: scale(1.05); }
+  .product-bg:nth-child(1) { background: linear-gradient(135deg, #E8E0D4 0%, #D4C8B8 100%); }
+  .product-card:nth-child(1) .product-bg { background: linear-gradient(135deg, #2C201A 0%, #1A1410 100%); }
+  .product-card:nth-child(2) .product-bg { background: linear-gradient(135deg, #D4C8B8 0%, #C0B0A0 100%); }
+  .product-card:nth-child(3) .product-bg { background: linear-gradient(135deg, #1E2418 0%, #141A10 100%); }
+  .product-card:nth-child(4) .product-bg { background: linear-gradient(135deg, #C8C0B8 0%, #B0A898 100%); }
+  .product-actions { position: absolute; bottom: 0; left: 0; right: 0; padding: 1rem; display: flex; gap: 0.5rem; transform: translateY(100%); transition: transform 0.4s; }
+  .product-card:hover .product-actions { transform: translateY(0); }
+  .btn-add { flex: 1; padding: 0.8rem; background: var(--charcoal); color: white; border: none; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; transition: background 0.3s; }
+  .btn-add:hover { background: var(--gold); }
+  .btn-wish { width: 42px; background: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; transition: all 0.3s; }
+  .btn-wish:hover { background: var(--gold); }
+  .product-tag { position: absolute; top: 1rem; left: 1rem; background: var(--gold); color: white; font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; padding: 0.3rem 0.7rem; }
+  .product-name { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 400; color: var(--charcoal); margin-bottom: 0.4rem; }
+  .product-material { font-size: 0.65rem; letter-spacing: 0.1em; color: var(--mid); margin-bottom: 0.6rem; text-transform: uppercase; }
+  .product-price { font-size: 0.9rem; color: var(--gold); letter-spacing: 0.05em; }
+  .product-price s { color: var(--mid); font-size: 0.8rem; margin-left: 0.5rem; }
+
+  /* SPLIT FEATURE */
+  .split-feature { display: grid; grid-template-columns: 1fr 1fr; min-height: 600px; }
+  .split-left { background: var(--charcoal); padding: 8rem 6rem; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; }
+  .split-left::before { content: 'SS2025'; position: absolute; right: -2rem; top: 50%; transform: translateY(-50%) rotate(90deg); font-family: 'Cormorant Garamond', serif; font-size: 8rem; color: rgba(184,151,90,0.08); white-space: nowrap; pointer-events: none; }
+  .split-eyebrow { font-size: 0.6rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); margin-bottom: 2rem; }
+  .split-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 4vw, 4.5rem); font-weight: 300; color: white; line-height: 1.1; margin-bottom: 2rem; }
+  .split-title em { font-style: italic; color: var(--gold-light); }
+  .split-text { font-size: 0.8rem; line-height: 2; color: rgba(255,255,255,0.6); max-width: 380px; margin-bottom: 3rem; }
+  .btn-outline { display: inline-block; padding: 1rem 2.5rem; border: 1px solid var(--gold); color: var(--gold); font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; text-decoration: none; transition: all 0.4s; }
+  .btn-outline:hover { background: var(--gold); color: var(--charcoal); }
+  .split-right { background: linear-gradient(160deg, #2C2018 0%, #1A1208 50%, #241C14 100%); position: relative; display: flex; align-items: center; justify-content: center; }
+  .split-right-label { font-family: 'Cormorant Garamond', serif; font-size: 5rem; font-style: italic; color: rgba(212,176,122,0.15); text-align: center; }
+
+  /* TESTIMONIAL */
+  .testimonial { padding: 8rem 4rem; text-align: center; background: var(--ivory); }
+  .quote-mark { font-family: 'Cormorant Garamond', serif; font-size: 8rem; color: var(--gold); line-height: 0.5; margin-bottom: 2rem; opacity: 0.3; }
+  .quote-text { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 300; font-style: italic; color: var(--charcoal); max-width: 800px; margin: 0 auto 2.5rem; line-height: 1.5; }
+  .quote-author { font-size: 0.65rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+  .quote-role { font-size: 0.65rem; letter-spacing: 0.2em; color: var(--mid); }
+  .testimonial-dots { display: flex; justify-content: center; gap: 0.5rem; margin-top: 3rem; }
+  .t-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--light-gray); cursor: pointer; transition: background 0.3s; }
+  .t-dot.active { background: var(--gold); }
+
+  /* NEWSLETTER */
+  .newsletter { background: var(--cream); padding: 7rem 4rem; display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; border-top: 1px solid var(--light-gray); border-bottom: 1px solid var(--light-gray); }
+  .nl-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 3vw, 3rem); font-weight: 300; color: var(--charcoal); margin-bottom: 1rem; }
+  .nl-sub { font-size: 0.8rem; line-height: 2; color: var(--mid); }
+  .nl-form { display: flex; gap: 0; }
+  .nl-input { flex: 1; padding: 1.1rem 1.5rem; border: 1px solid var(--light-gray); background: var(--ivory); font-family: 'Raleway', sans-serif; font-size: 0.75rem; letter-spacing: 0.1em; color: var(--charcoal); outline: none; transition: border-color 0.3s; }
+  .nl-input:focus { border-color: var(--gold); }
+  .nl-btn { padding: 1.1rem 2rem; background: var(--charcoal); color: white; border: none; font-family: 'Raleway', sans-serif; font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; cursor: pointer; transition: background 0.3s; white-space: nowrap; }
+  .nl-btn:hover { background: var(--gold); }
+
+  /* FOOTER */
+  footer { background: var(--charcoal); color: rgba(255,255,255,0.6); padding: 6rem 4rem 3rem; }
+  .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 4rem; margin-bottom: 4rem; }
+  .footer-brand { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; color: white; letter-spacing: 0.2em; margin-bottom: 1.5rem; }
+  .footer-brand span { color: var(--gold); }
+  .footer-desc { font-size: 0.75rem; line-height: 2; max-width: 280px; }
+  .footer-heading { font-size: 0.6rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; }
+  .footer-links { list-style: none; }
+  .footer-links li { margin-bottom: 0.8rem; }
+  .footer-links a { text-decoration: none; color: rgba(255,255,255,0.5); font-size: 0.75rem; letter-spacing: 0.05em; transition: color 0.3s; }
+  .footer-links a:hover { color: var(--gold); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 2rem; display: flex; justify-content: space-between; align-items: center; }
+  .footer-copy { font-size: 0.65rem; letter-spacing: 0.1em; }
+  .footer-pay { display: flex; gap: 0.8rem; }
+  .pay-badge { font-size: 0.6rem; letter-spacing: 0.15em; border: 1px solid rgba(255,255,255,0.15); padding: 0.3rem 0.7rem; border-radius: 3px; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+  /* Decorative gold line */
+  .gold-line { width: 60px; height: 1px; background: var(--gold); margin: 0 auto 1.5rem; }
+
+  a { color: inherit; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">MAISON <span>LUMIÈRE</span></a>
+  <ul class="nav-links">
+    <li><a href="products.html">Collections</a></li>
+    <li><a href="products.html">New Arrivals</a></li>
+    <li><a href="products.html">Sale</a></li>
+    <li><a href="#">Lookbook</a></li>
+    <li><a href="#">About</a></li>
+  </ul>
+  <div class="nav-icons">
+    <a href="#">Search</a>
+    <a href="#" style="position:relative;">Bag <span class="cart-badge">2</span></a>
+    <a href="cart.html" style="position:relative;">Cart</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">Spring / Summer Collection 2025</p>
+    <h1 class="hero-title">Wear Your<br><em>Story</em><br>With Grace</h1>
+    <p class="hero-sub">Curated luxury for the discerning. Each piece is a testament to craftsmanship, heritage, and timeless elegance.</p>
+    <div>
+      <a href="products.html" class="btn-primary"><span>Shop Collection</span></a>
+      <a href="#" class="btn-ghost">Lookbook</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-img-grid">
+      <div class="hero-img-cell"></div>
+      <div class="hero-img-cell"></div>
+      <div class="hero-img-cell"></div>
+    </div>
+    <div class="hero-fashion-label">Lumière</div>
+    <div class="hero-overlay">
+      <div class="hero-stat"><span class="hero-stat-num">340+</span><span class="hero-stat-label">Pieces</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">42</span><span class="hero-stat-label">Designers</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">18</span><span class="hero-stat-label">Countries</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee">
+    <span class="marquee-item">New Arrivals</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Free Shipping Over ₹15,000</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">SS25 Collection Live</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Exclusive Members Preview</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">New Arrivals</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Free Shipping Over ₹15,000</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">SS25 Collection Live</span><span class="marquee-dot">✦</span>
+    <span class="marquee-item">Exclusive Members Preview</span><span class="marquee-dot">✦</span>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<section class="categories">
+  <div class="section-header">
+    <p class="section-eyebrow">Browse by Category</p>
+    <div class="gold-line"></div>
+    <h2 class="section-title">Shop the <em>Collection</em></h2>
+  </div>
+  <div class="cat-grid">
+    <a href="products.html" class="cat-card">
+      <div class="cat-card-inner">
+        <div class="cat-bg"></div>
+        <div class="cat-info">
+          <p class="cat-name">Women's Fashion</p>
+          <p class="cat-count">142 Pieces</p>
+        </div>
+        <div class="cat-arrow">→</div>
+      </div>
+    </a>
+    <a href="products.html" class="cat-card">
+      <div class="cat-card-inner">
+        <div class="cat-bg"></div>
+        <div class="cat-info">
+          <p class="cat-name">Men's Wear</p>
+          <p class="cat-count">98 Pieces</p>
+        </div>
+        <div class="cat-arrow">→</div>
+      </div>
+    </a>
+    <a href="products.html" class="cat-card">
+      <div class="cat-card-inner">
+        <div class="cat-bg"></div>
+        <div class="cat-info">
+          <p class="cat-name">Accessories</p>
+          <p class="cat-count">64 Pieces</p>
+        </div>
+        <div class="cat-arrow">→</div>
+      </div>
+    </a>
+    <a href="products.html" class="cat-card">
+      <div class="cat-card-inner">
+        <div class="cat-bg"></div>
+        <div class="cat-info">
+          <p class="cat-name">Footwear</p>
+          <p class="cat-count">56 Pieces</p>
+        </div>
+        <div class="cat-arrow">→</div>
+      </div>
+    </a>
+    <a href="products.html" class="cat-card">
+      <div class="cat-card-inner">
+        <div class="cat-bg"></div>
+        <div class="cat-info">
+          <p class="cat-name">Haute Couture</p>
+          <p class="cat-count">28 Pieces</p>
+        </div>
+        <div class="cat-arrow">→</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- FEATURED PRODUCTS -->
+<section class="featured">
+  <div class="section-header">
+    <p class="section-eyebrow">Curated for You</p>
+    <div class="gold-line"></div>
+    <h2 class="section-title">Featured <em>Pieces</em></h2>
+  </div>
+  <div class="products-grid">
+    <div class="product-card" onclick="window.location='product.html'">
+      <div class="product-img">
+        <div class="product-img-inner">
+          <div class="product-bg"></div>
+          <div class="product-tag">New</div>
+          <div class="product-actions">
+            <button class="btn-add">Add to Cart</button>
+            <button class="btn-wish">♡</button>
+          </div>
+        </div>
+      </div>
+      <p class="product-name">Noir Velvet Blazer</p>
+      <p class="product-material">Italian Velvet</p>
+      <p class="product-price">₹24,500 <s>₹32,000</s></p>
+    </div>
+    <div class="product-card" onclick="window.location='product.html'">
+      <div class="product-img">
+        <div class="product-img-inner">
+          <div class="product-bg"></div>
+          <div class="product-actions">
+            <button class="btn-add">Add to Cart</button>
+            <button class="btn-wish">♡</button>
+          </div>
+        </div>
+      </div>
+      <p class="product-name">Cashmere Draped Coat</p>
+      <p class="product-material">Pure Cashmere</p>
+      <p class="product-price">₹38,900</p>
+    </div>
+    <div class="product-card" onclick="window.location='product.html'">
+      <div class="product-img">
+        <div class="product-img-inner">
+          <div class="product-bg"></div>
+          <div class="product-tag">Sale</div>
+          <div class="product-actions">
+            <button class="btn-add">Add to Cart</button>
+            <button class="btn-wish">♡</button>
+          </div>
+        </div>
+      </div>
+      <p class="product-name">Silk Wrap Dress</p>
+      <p class="product-material">Mulberry Silk</p>
+      <p class="product-price">₹18,200 <s>₹26,000</s></p>
+    </div>
+    <div class="product-card" onclick="window.location='product.html'">
+      <div class="product-img">
+        <div class="product-img-inner">
+          <div class="product-bg"></div>
+          <div class="product-actions">
+            <button class="btn-add">Add to Cart</button>
+            <button class="btn-wish">♡</button>
+          </div>
+        </div>
+      </div>
+      <p class="product-name">Linen Tailored Suit</p>
+      <p class="product-material">Belgian Linen</p>
+      <p class="product-price">₹42,000</p>
+    </div>
+  </div>
+</section>
+
+<!-- SPLIT FEATURE -->
+<section class="split-feature">
+  <div class="split-left">
+    <p class="split-eyebrow">Our Promise</p>
+    <h2 class="split-title">Crafted with<br><em>Intention</em></h2>
+    <p class="split-text">Every garment in our collection is ethically sourced and artisan-made. We partner with ateliers across France, Italy, and India who share our commitment to craft, sustainability, and enduring beauty.</p>
+    <a href="products.html" class="btn-outline">Discover the Craft</a>
+  </div>
+  <div class="split-right">
+    <div class="split-right-label">Artisan<br>Made</div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<section class="testimonial">
+  <div class="quote-mark">"</div>
+  <p class="quote-text">Maison Lumière redefined what luxury means to me. Every piece I own from them feels like it was made specifically for my soul.</p>
+  <p class="quote-author">Priya Menon</p>
+  <p class="quote-role">Fashion Editor, Vogue India</p>
+  <div class="testimonial-dots">
+    <div class="t-dot active"></div>
+    <div class="t-dot"></div>
+    <div class="t-dot"></div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter">
+  <div>
+    <p class="section-eyebrow">Stay Connected</p>
+    <h2 class="nl-title">First Access,<br>Always.</h2>
+    <p class="nl-sub">Join our inner circle for exclusive previews, early access to new collections, and invitations to private events.</p>
+  </div>
+  <div>
+    <div class="nl-form">
+      <input class="nl-input" type="email" placeholder="Your email address">
+      <button class="nl-btn">Subscribe</button>
+    </div>
+    <p style="font-size:0.65rem;color:var(--mid);margin-top:1rem;letter-spacing:0.05em;">By subscribing you agree to our Privacy Policy. Unsubscribe anytime.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand">MAISON <span>LUMIÈRE</span></div>
+      <p class="footer-desc">Luxury fashion curated for the discerning soul. Each piece celebrates the intersection of art, craft, and timeless elegance.</p>
+    </div>
+    <div>
+      <p class="footer-heading">Shop</p>
+      <ul class="footer-links">
+        <li><a href="products.html">New Arrivals</a></li>
+        <li><a href="products.html">Women</a></li>
+        <li><a href="products.html">Men</a></li>
+        <li><a href="products.html">Accessories</a></li>
+        <li><a href="products.html">Sale</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-heading">Help</p>
+      <ul class="footer-links">
+        <li><a href="#">Size Guide</a></li>
+        <li><a href="#">Shipping Info</a></li>
+        <li><a href="#">Returns</a></li>
+        <li><a href="#">Track Order</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-heading">Company</p>
+      <ul class="footer-links">
+        <li><a href="#">Our Story</a></li>
+        <li><a href="#">Sustainability</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="#">Affiliates</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2025 Maison Lumière. All rights reserved.</p>
+    <div class="footer-pay">
+      <span class="pay-badge">VISA</span>
+      <span class="pay-badge">MASTERCARD</span>
+      <span class="pay-badge">UPI</span>
+      <span class="pay-badge">EMI</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Testimonial dots
+  document.querySelectorAll('.t-dot').forEach((dot, i) => {
+    dot.addEventListener('click', () => {
+      document.querySelectorAll('.t-dot').forEach(d => d.classList.remove('active'));
+      dot.classList.add('active');
+    });
+  });
+
+  // Nav scroll effect
+  window.addEventListener('scroll', () => {
+    document.querySelector('nav').style.boxShadow = window.scrollY > 50 ? '0 2px 30px rgba(0,0,0,0.08)' : 'none';
+  });
+</script>
+</body>
+</html>
