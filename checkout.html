@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — MAISON LUMIÈRE</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Raleway:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --cream:#F5F0E8;--ivory:#FDFBF7;--gold:#B8975A;--gold-light:#D4B07A;--charcoal:#1A1A1A;--mid:#4A4A4A;--light-gray:#E8E4DC; }
+  * { margin:0;padding:0;box-sizing:border-box; }
+  body { background:var(--ivory);color:var(--charcoal);font-family:'Raleway',sans-serif;font-weight:300;overflow-x:hidden; }
+
+  nav { position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.5rem 4rem;background:rgba(253,251,247,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(184,151,90,0.15); }
+  .nav-logo { font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;letter-spacing:0.25em;color:var(--charcoal);text-decoration:none; }
+  .nav-logo span { color:var(--gold); }
+  .nav-secure { font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);display:flex;align-items:center;gap:0.5rem; }
+
+  /* LAYOUT */
+  .checkout-wrap { display:grid;grid-template-columns:1fr 420px;min-height:100vh; }
+
+  /* FORM SIDE */
+  .form-side { padding:8rem 5rem 4rem;border-right:1px solid var(--light-gray); }
+
+  /* STEPS */
+  .checkout-steps { display:flex;align-items:center;gap:0;margin-bottom:3rem; }
+  .step { display:flex;align-items:center;gap:0.8rem;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase; }
+  .step-num { width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.65rem; }
+  .step.active .step-num { background:var(--gold);color:white; }
+  .step.done .step-num { background:var(--charcoal);color:white; }
+  .step.pending .step-num { border:1px solid var(--light-gray);color:var(--mid); }
+  .step.active { color:var(--charcoal); }
+  .step.pending { color:var(--mid); }
+  .step-line { flex:1;height:1px;background:var(--light-gray);margin:0 1rem;max-width:60px; }
+  .step-line.done { background:var(--gold); }
+
+  /* SECTIONS */
+  .form-section { margin-bottom:3rem; }
+  .section-heading { font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;margin-bottom:0.3rem; }
+  .section-heading em { font-style:italic;color:var(--gold); }
+  .section-sub { font-size:0.7rem;color:var(--mid);letter-spacing:0.05em;margin-bottom:2rem; }
+  .divider { height:1px;background:var(--light-gray);margin:2rem 0; }
+
+  /* FORM FIELDS */
+  .form-row { display:grid;gap:1rem;margin-bottom:1rem; }
+  .form-row.two { grid-template-columns:1fr 1fr; }
+  .form-row.three { grid-template-columns:2fr 1fr 1fr; }
+  .form-group { display:flex;flex-direction:column;gap:0.4rem; }
+  .form-label { font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--mid); }
+  .form-input { padding:0.9rem 1rem;border:1px solid var(--light-gray);background:var(--ivory);font-family:'Raleway',sans-serif;font-size:0.8rem;letter-spacing:0.05em;color:var(--charcoal);outline:none;transition:border-color 0.3s;-webkit-appearance:none; }
+  .form-input:focus { border-color:var(--gold); }
+  .form-input::placeholder { color:rgba(74,74,74,0.4); }
+  select.form-input { cursor:pointer; }
+  .form-check { display:flex;align-items:center;gap:0.8rem;margin-top:0.5rem; }
+  .form-check input[type=checkbox] { appearance:none;width:16px;height:16px;border:1px solid var(--light-gray);cursor:pointer;position:relative;transition:all 0.3s;flex-shrink:0; }
+  .form-check input[type=checkbox]:checked { background:var(--gold);border-color:var(--gold); }
+  .form-check input[type=checkbox]:checked::after { content:'✓';position:absolute;color:white;font-size:0.65rem;top:50%;left:50%;transform:translate(-50%,-50%); }
+  .form-check label { font-size:0.72rem;color:var(--mid);cursor:pointer; }
+
+  /* PAYMENT METHODS */
+  .payment-tabs { display:flex;gap:0;margin-bottom:2rem;border:1px solid var(--light-gray); }
+  .pay-tab { flex:1;padding:1rem;border:none;background:transparent;font-family:'Raleway',sans-serif;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;color:var(--mid);transition:all 0.3s;border-right:1px solid var(--light-gray); }
+  .pay-tab:last-child { border-right:none; }
+  .pay-tab.active { background:var(--charcoal);color:white; }
+  .pay-tab:hover:not(.active) { background:var(--cream); }
+  .card-panel { background:var(--cream);padding:2rem; }
+  .card-row { display:flex;gap:0.5rem;margin-bottom:1rem;align-items:center; }
+  .card-brand { font-size:0.55rem;letter-spacing:0.1em;border:1px solid var(--light-gray);padding:0.3rem 0.6rem;background:white;color:var(--mid); }
+  .card-secured { font-size:0.6rem;color:var(--mid);letter-spacing:0.05em; }
+
+  /* SUBMIT */
+  .submit-row { margin-top:2rem; }
+  .btn-place-order { width:100%;padding:1.4rem;background:var(--charcoal);color:white;border:none;font-family:'Raleway',sans-serif;font-size:0.75rem;letter-spacing:0.3em;text-transform:uppercase;cursor:pointer;transition:all 0.4s;position:relative;overflow:hidden; }
+  .btn-place-order::before { content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:var(--gold);transition:left 0.4s; }
+  .btn-place-order:hover::before { left:0; }
+  .btn-place-order span { position:relative;z-index:1; }
+  .submit-sub { text-align:center;font-size:0.65rem;color:var(--mid);margin-top:1rem;line-height:1.8;letter-spacing:0.05em; }
+  .submit-sub a { color:var(--gold); }
+
+  /* SUMMARY SIDE */
+  .summary-side { background:var(--cream);padding:8rem 3.5rem 4rem;border-left:1px solid var(--light-gray); }
+  .summary-title { font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;margin-bottom:2rem; }
+
+  .order-items { margin-bottom:2rem; }
+  .oi { display:flex;gap:1.2rem;align-items:flex-start;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--light-gray); }
+  .oi:last-child { border-bottom:none; }
+  .oi-img { width:64px;height:80px;position:relative;flex-shrink:0; }
+  .oi-img div { width:100%;height:100%; }
+  .oi-badge { position:absolute;top:-8px;right:-8px;width:22px;height:22px;background:var(--charcoal);color:white;border-radius:50%;font-size:0.6rem;display:flex;align-items:center;justify-content:center; }
+  .oi-name { font-family:'Cormorant Garamond',serif;font-size:1rem;margin-bottom:0.3rem; }
+  .oi-meta { font-size:0.65rem;color:var(--mid);letter-spacing:0.05em;line-height:1.8; }
+  .oi-price { font-size:0.9rem;color:var(--charcoal);margin-left:auto; }
+
+  .sum-rows { }
+  .sum-row { display:flex;justify-content:space-between;padding:0.7rem 0;border-bottom:1px solid var(--light-gray);font-size:0.78rem; }
+  .sum-row:last-of-type { border-bottom:none; }
+  .sum-label { color:var(--mid); }
+  .sum-val { color:var(--charcoal); }
+  .sum-val.free { color:#3D7A3D; }
+  .sum-val.disc { color:#8B4444; }
+  .sum-divider { height:1px;background:var(--charcoal);margin:1rem 0; }
+  .sum-total { display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5rem; }
+  .sum-total-label { font-size:0.7rem;letter-spacing:0.25em;text-transform:uppercase; }
+  .sum-total-val { font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300; }
+
+  /* Trust */
+  .trust-section { margin-top:2rem;padding-top:2rem;border-top:1px solid var(--light-gray); }
+  .trust-item { display:flex;gap:0.8rem;align-items:flex-start;margin-bottom:1rem; }
+  .trust-icon { font-size:1.1rem;flex-shrink:0; }
+  .trust-text { font-size:0.68rem;color:var(--mid);letter-spacing:0.05em;line-height:1.7; }
+  .trust-text strong { color:var(--charcoal);font-weight:400; }
+
+  /* SUCCESS MODAL */
+  .modal-overlay { position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;display:none;align-items:center;justify-content:center; }
+  .modal-overlay.show { display:flex; }
+  .modal { background:white;padding:4rem;max-width:520px;width:90%;text-align:center;animation:slideUp 0.5s ease; }
+  .modal-icon { font-size:3rem;margin-bottom:1.5rem; }
+  .modal-title { font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:300;margin-bottom:1rem; }
+  .modal-title em { font-style:italic;color:var(--gold); }
+  .modal-sub { font-size:0.8rem;line-height:2;color:var(--mid);margin-bottom:2rem; }
+  .modal-order { font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:2rem; }
+  .modal-btn { display:inline-block;padding:1rem 3rem;background:var(--charcoal);color:white;text-decoration:none;font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;transition:background 0.3s; }
+  .modal-btn:hover { background:var(--gold); }
+  @keyframes slideUp { from { opacity:0;transform:translateY(30px); } to { opacity:1;transform:translateY(0); } }
+
+  a { color:inherit; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">MAISON <span>LUMIÈRE</span></a>
+  <div class="nav-secure">🔒 Secure Checkout</div>
+</nav>
+
+<div class="checkout-wrap">
+  <!-- FORM SIDE -->
+  <div class="form-side">
+    <!-- STEPS -->
+    <div class="checkout-steps">
+      <div class="step done"><div class="step-num">✓</div>Cart</div>
+      <div class="step-line done"></div>
+      <div class="step active"><div class="step-num">2</div>Details</div>
+      <div class="step-line"></div>
+      <div class="step pending"><div class="step-num">3</div>Payment</div>
+      <div class="step-line"></div>
+      <div class="step pending"><div class="step-num">4</div>Confirm</div>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="form-section">
+      <h2 class="section-heading">Contact <em>Details</em></h2>
+      <p class="section-sub">We'll only contact you regarding your order.</p>
+      <div class="form-row two">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input class="form-input" type="text" placeholder="Priya">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input class="form-input" type="text" placeholder="Menon">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input class="form-input" type="email" placeholder="priya@email.com">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <input class="form-input" type="tel" placeholder="+91 98765 43210">
+        </div>
+      </div>
+      <div class="form-check">
+        <input type="checkbox" id="newsletter" checked>
+        <label for="newsletter">Subscribe for exclusive early access and collection previews</label>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- SHIPPING -->
+    <div class="form-section">
+      <h2 class="section-heading">Shipping <em>Address</em></h2>
+      <p class="section-sub">Please enter your delivery address.</p>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Address Line 1</label>
+          <input class="form-input" type="text" placeholder="Flat / House / Building name">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Address Line 2</label>
+          <input class="form-input" type="text" placeholder="Street, locality, landmark">
+        </div>
+      </div>
+      <div class="form-row three">
+        <div class="form-group">
+          <label class="form-label">City</label>
+          <input class="form-input" type="text" placeholder="Hyderabad">
+        </div>
+        <div class="form-group">
+          <label class="form-label">State</label>
+          <select class="form-input">
+            <option>Telangana</option>
+            <option>Maharashtra</option>
+            <option>Delhi</option>
+            <option>Karnataka</option>
+            <option>Tamil Nadu</option>
+            <option>West Bengal</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">PIN Code</label>
+          <input class="form-input" type="text" placeholder="500 001">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Country</label>
+          <select class="form-input">
+            <option>India</option>
+            <option>United Arab Emirates</option>
+            <option>United Kingdom</option>
+            <option>United States</option>
+            <option>Singapore</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-check">
+        <input type="checkbox" id="sameBilling" checked>
+        <label for="sameBilling">Billing address is the same as delivery</label>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- SHIPPING METHOD -->
+    <div class="form-section">
+      <h2 class="section-heading">Shipping <em>Method</em></h2>
+      <p class="section-sub">Select your preferred delivery option.</p>
+      <div style="display:flex;flex-direction:column;gap:0.8rem;">
+        <label style="display:flex;align-items:center;gap:1rem;padding:1.2rem 1.5rem;border:1px solid var(--gold);background:rgba(184,151,90,0.03);cursor:pointer;">
+          <input type="radio" name="shipping" checked style="accent-color:var(--gold);">
+          <div style="flex:1;">
+            <div style="font-size:0.75rem;letter-spacing:0.05em;color:var(--charcoal);margin-bottom:0.2rem;">Standard Delivery (3–5 business days)</div>
+            <div style="font-size:0.65rem;color:var(--mid);">Delivered by Blue Dart / DTDC</div>
+          </div>
+          <div style="font-size:0.8rem;color:#3D7A3D;font-weight:400;">Free</div>
+        </label>
+        <label style="display:flex;align-items:center;gap:1rem;padding:1.2rem 1.5rem;border:1px solid var(--light-gray);cursor:pointer;">
+          <input type="radio" name="shipping" style="accent-color:var(--gold);">
+          <div style="flex:1;">
+            <div style="font-size:0.75rem;letter-spacing:0.05em;color:var(--charcoal);margin-bottom:0.2rem;">Express Delivery (1–2 business days)</div>
+            <div style="font-size:0.65rem;color:var(--mid);">Delivered by FedEx Priority</div>
+          </div>
+          <div style="font-size:0.8rem;color:var(--charcoal);">₹499</div>
+        </label>
+        <label style="display:flex;align-items:center;gap:1rem;padding:1.2rem 1.5rem;border:1px solid var(--light-gray);cursor:pointer;">
+          <input type="radio" name="shipping" style="accent-color:var(--gold);">
+          <div style="flex:1;">
+            <div style="font-size:0.75rem;letter-spacing:0.05em;color:var(--charcoal);margin-bottom:0.2rem;">White Glove Delivery (2–3 business days)</div>
+            <div style="font-size:0.65rem;color:var(--mid);">Signature collection in a Lumière garment box</div>
+          </div>
+          <div style="font-size:0.8rem;color:var(--charcoal);">₹1,299</div>
+        </label>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- PAYMENT -->
+    <div class="form-section">
+      <h2 class="section-heading">Payment <em>Method</em></h2>
+      <p class="section-sub">All transactions are encrypted and secured.</p>
+      <div class="payment-tabs">
+        <button class="pay-tab active" onclick="switchPay(this,'card')">Card</button>
+        <button class="pay-tab" onclick="switchPay(this,'upi')">UPI</button>
+        <button class="pay-tab" onclick="switchPay(this,'netbank')">Net Banking</button>
+        <button class="pay-tab" onclick="switchPay(this,'emi')">EMI</button>
+        <button class="pay-tab" onclick="switchPay(this,'cod')">COD</button>
+      </div>
+
+      <div class="card-panel" id="pay-card">
+        <div class="card-row">
+          <span class="card-brand">VISA</span>
+          <span class="card-brand">MC</span>
+          <span class="card-brand">AMEX</span>
+          <span class="card-brand">RUPAY</span>
+          <span class="card-secured">🔒 SSL Secured</span>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Card Number</label>
+            <input class="form-input" type="text" placeholder="1234  5678  9012  3456" maxlength="19" id="cardNum" oninput="formatCard(this)">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Cardholder Name</label>
+            <input class="form-input" type="text" placeholder="Name as on card">
+          </div>
+        </div>
+        <div class="form-row two">
+          <div class="form-group">
+            <label class="form-label">Expiry Date</label>
+            <input class="form-input" type="text" placeholder="MM / YY" maxlength="7" oninput="formatExpiry(this)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">CVV</label>
+            <input class="form-input" type="password" placeholder="•••" maxlength="4">
+          </div>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" id="saveCard">
+          <label for="saveCard">Save card for faster future checkout</label>
+        </div>
+      </div>
+
+      <div class="card-panel" id="pay-upi" style="display:none;">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">UPI ID</label>
+            <input class="form-input" type="text" placeholder="yourname@upi">
+          </div>
+        </div>
+        <p style="font-size:0.7rem;color:var(--mid);margin-top:0.5rem;">You will receive a payment request on your UPI app.</p>
+      </div>
+
+      <div class="card-panel" id="pay-netbank" style="display:none;">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Select Bank</label>
+            <select class="form-input">
+              <option>HDFC Bank</option>
+              <option>ICICI Bank</option>
+              <option>SBI</option>
+              <option>Axis Bank</option>
+              <option>Kotak Mahindra</option>
+              <option>Yes Bank</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-panel" id="pay-emi" style="display:none;">
+        <p style="font-size:0.75rem;color:var(--mid);margin-bottom:1rem;">Select your preferred EMI tenure at 0% interest:</p>
+        <div style="display:flex;gap:0.8rem;flex-wrap:wrap;">
+          <label style="border:1px solid var(--gold);padding:0.8rem 1.5rem;cursor:pointer;font-size:0.7rem;background:rgba(184,151,90,0.05);">3 Months<br><strong style="font-family:Cormorant Garamond,serif;font-size:1.1rem;">₹21,987/mo</strong></label>
+          <label style="border:1px solid var(--light-gray);padding:0.8rem 1.5rem;cursor:pointer;font-size:0.7rem;">6 Months<br><strong style="font-family:Cormorant Garamond,serif;font-size:1.1rem;">₹10,994/mo</strong></label>
+          <label style="border:1px solid var(--light-gray);padding:0.8rem 1.5rem;cursor:pointer;font-size:0.7rem;">12 Months<br><strong style="font-family:Cormorant Garamond,serif;font-size:1.1rem;">₹5,497/mo</strong></label>
+          <label style="border:1px solid var(--light-gray);padding:0.8rem 1.5rem;cursor:pointer;font-size:0.7rem;">18 Months<br><strong style="font-family:Cormorant Garamond,serif;font-size:1.1rem;">₹3,664/mo</strong></label>
+        </div>
+      </div>
+
+      <div class="card-panel" id="pay-cod" style="display:none;">
+        <p style="font-size:0.75rem;color:var(--mid);line-height:2;">Cash on Delivery is available for orders up to ₹1,00,000. An additional handling fee of ₹99 applies. Please keep exact change ready at the time of delivery.</p>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-row">
+      <button class="btn-place-order" onclick="placeOrder()"><span>Place Order — ₹65,962</span></button>
+      <p class="submit-sub">By placing your order, you agree to our <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a>.<br>Your personal data is handled in accordance with GDPR.</p>
+    </div>
+  </div>
+
+  <!-- SUMMARY SIDE -->
+  <aside class="summary-side">
+    <h2 class="summary-title">Your Order</h2>
+    <div class="order-items">
+      <div class="oi">
+        <div class="oi-img">
+          <div style="background:linear-gradient(135deg,#2C201A,#1A1410);width:100%;height:100%;"></div>
+          <div class="oi-badge">1</div>
+        </div>
+        <div style="flex:1;">
+          <p class="oi-name">Noir Velvet Blazer</p>
+          <p class="oi-meta">Size: M · Midnight Black<br>Italian Velvet</p>
+        </div>
+        <div class="oi-price">₹24,500</div>
+      </div>
+      <div class="oi">
+        <div class="oi-img">
+          <div style="background:linear-gradient(135deg,#D4C8B8,#C0B0A0);width:100%;height:100%;"></div>
+          <div class="oi-badge">1</div>
+        </div>
+        <div style="flex:1;">
+          <p class="oi-name">Cashmere Draped Coat</p>
+          <p class="oi-meta">Size: S · Ivory Sand<br>Pure Cashmere</p>
+        </div>
+        <div class="oi-price">₹38,900</div>
+      </div>
+    </div>
+    <div class="sum-rows">
+      <div class="sum-row"><span class="sum-label">Subtotal</span><span class="sum-val">₹63,400</span></div>
+      <div class="sum-row"><span class="sum-label">Discount (SS25)</span><span class="sum-val disc">− ₹7,500</span></div>
+      <div class="sum-row"><span class="sum-label">Shipping</span><span class="sum-val free">Free</span></div>
+      <div class="sum-row"><span class="sum-label">GST (18%)</span><span class="sum-val">₹10,062</span></div>
+    </div>
+    <div class="sum-divider"></div>
+    <div class="sum-total">
+      <span class="sum-total-label">Total</span>
+      <span class="sum-total-val">₹65,962</span>
+    </div>
+
+    <div class="trust-section">
+      <div class="trust-item">
+        <div class="trust-icon">🔒</div>
+        <div class="trust-text"><strong>256-bit SSL Encryption</strong><br>Your payment data is fully encrypted and never stored.</div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">↩️</div>
+        <div class="trust-text"><strong>30-Day Free Returns</strong><br>Not satisfied? Return within 30 days, no questions asked.</div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">🚚</div>
+        <div class="trust-text"><strong>Tracked Delivery</strong><br>Your order is tracked end-to-end with real-time updates.</div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">🏆</div>
+        <div class="trust-text"><strong>100% Authenticity</strong><br>Every piece is verified and sourced directly from artisan ateliers.</div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal">
+    <div class="modal-icon">✨</div>
+    <h2 class="modal-title">Order <em>Confirmed</em></h2>
+    <p class="modal-sub">Thank you for your purchase! Your Maison Lumière pieces are being carefully prepared and will be dispatched within 24 hours.</p>
+    <p class="modal-order">Order #ML-2025-48291</p>
+    <a href="index.html" class="modal-btn">Continue Shopping</a>
+  </div>
+</div>
+
+<script>
+  function switchPay(el, id) {
+    document.querySelectorAll('.pay-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    ['card','upi','netbank','emi','cod'].forEach(p => {
+      const panel = document.getElementById('pay-' + p);
+      if (panel) panel.style.display = p === id ? 'block' : 'none';
+    });
+  }
+
+  function formatCard(el) {
+    let v = el.value.replace(/\D/g,'').substring(0,16);
+    el.value = v.replace(/(.{4})/g,'$1  ').trim();
+  }
+
+  function formatExpiry(el) {
+    let v = el.value.replace(/\D/g,'').substring(0,4);
+    if (v.length >= 2) v = v.substring(0,2) + ' / ' + v.substring(2);
+    el.value = v;
+  }
+
+  function placeOrder() {
+    document.getElementById('successModal').classList.add('show');
+  }
+
+  document.getElementById('successModal').addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('show');
+  });
+</script>
+</body>
+</html>
