@@ -1,1 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LUNETTE — Nail Atelier</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #faf6f1;
+      --blush: #e8c9bc;
+      --rose: #c9837a;
+      --deep: #2b1f1a;
+      --warm-grey: #8c7b74;
+      --accent: #b5614e;
+    }
 
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--cream);
+      color: var(--deep);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom Cursor */
+    .cursor {
+      width: 10px; height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.15s ease, opacity 0.15s;
+      transform: translate(-50%, -50%);
+    }
+    .cursor-ring {
+      width: 36px; height: 36px;
+      border: 1px solid var(--rose);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none;
+      z-index: 9998;
+      transition: transform 0.35s ease, width 0.25s, height 0.25s;
+      transform: translate(-50%, -50%);
+    }
+    body:hover .cursor { opacity: 1; }
+
+    /* Nav */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 28px 60px;
+      mix-blend-mode: multiply;
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--deep);
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex; gap: 40px; list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--deep);
+      text-decoration: none;
+      font-weight: 300;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-book {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border: 1px solid var(--deep);
+      padding: 10px 22px;
+      color: var(--deep);
+      text-decoration: none;
+      font-weight: 300;
+      transition: background 0.3s, color 0.3s;
+    }
+    .nav-book:hover { background: var(--deep); color: var(--cream); }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-left {
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 120px 60px 80px;
+      position: relative;
+      z-index: 2;
+    }
+    .hero-eyebrow {
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--warm-grey);
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp 1s 0.3s forwards;
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(4rem, 8vw, 9rem);
+      font-weight: 300;
+      line-height: 0.9;
+      color: var(--deep);
+      opacity: 0;
+      animation: fadeUp 1s 0.5s forwards;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--accent);
+    }
+    .hero-sub {
+      margin-top: 36px;
+      font-size: 0.8rem;
+      line-height: 1.9;
+      color: var(--warm-grey);
+      max-width: 320px;
+      font-weight: 300;
+      opacity: 0;
+      animation: fadeUp 1s 0.7s forwards;
+    }
+    .hero-cta {
+      margin-top: 50px;
+      display: flex; gap: 20px; align-items: center;
+      opacity: 0;
+      animation: fadeUp 1s 0.9s forwards;
+    }
+    .btn-primary {
+      background: var(--deep);
+      color: var(--cream);
+      padding: 16px 36px;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      transition: background 0.3s;
+    }
+    .btn-primary:hover { background: var(--accent); }
+    .btn-ghost {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--warm-grey);
+      text-decoration: none;
+      display: flex; align-items: center; gap: 10px;
+      transition: color 0.3s;
+    }
+    .btn-ghost::after {
+      content: '→';
+      font-size: 1rem;
+      transition: transform 0.3s;
+    }
+    .btn-ghost:hover { color: var(--deep); }
+    .btn-ghost:hover::after { transform: translateX(5px); }
+
+    .hero-right {
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-image-bg {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--blush) 0%, #d4a59a 40%, #c9837a 100%);
+    }
+    .hero-image-bg::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.06'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero-nail-art {
+      position: absolute;
+      bottom: -20px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; gap: 12px;
+      opacity: 0;
+      animation: floatUp 1.2s 1s forwards;
+    }
+    .nail {
+      width: 55px; height: 90px;
+      border-radius: 30px 30px 10px 10px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(43, 31, 26, 0.25);
+      transition: transform 0.4s ease;
+    }
+    .nail:hover { transform: translateY(-15px) scale(1.05); }
+    .nail:nth-child(1) { height: 75px; background: linear-gradient(160deg, #f9e4dc, #e8b4a6); transform: translateY(20px) rotate(-4deg); }
+    .nail:nth-child(2) { height: 95px; background: linear-gradient(160deg, #e8c9bc, #c9837a); }
+    .nail:nth-child(3) { height: 110px; background: linear-gradient(160deg, #c9837a, #a05c52); }
+    .nail:nth-child(4) { height: 95px; background: linear-gradient(160deg, #b5614e, #8c3e30); }
+    .nail:nth-child(5) { height: 75px; background: linear-gradient(160deg, #d4a59a, #b5807a); transform: translateY(20px) rotate(4deg); }
+    .nail::after {
+      content: '';
+      position: absolute; top: 8px; left: 50%;
+      transform: translateX(-50%);
+      width: 30px; height: 18px;
+      background: rgba(255,255,255,0.35);
+      border-radius: 50%;
+      filter: blur(4px);
+    }
+    .hero-badge {
+      position: absolute; top: 50px; right: 50px;
+      width: 100px; height: 100px;
+      border: 1px solid rgba(255,255,255,0.4);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      color: white;
+      font-size: 0.55rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      line-height: 1.7;
+      animation: rotateBadge 20s linear infinite;
+    }
+
+    /* Ticker */
+    .ticker-wrap {
+      background: var(--deep);
+      padding: 14px 0;
+      overflow: hidden;
+    }
+    .ticker {
+      display: flex; gap: 60px;
+      animation: ticker 25s linear infinite;
+      white-space: nowrap;
+    }
+    .ticker span {
+      color: var(--cream);
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      font-weight: 200;
+    }
+    .ticker-dot {
+      color: var(--rose);
+      font-size: 1rem;
+    }
+
+    /* Services */
+    .services {
+      padding: 120px 60px;
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+    .section-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--warm-grey);
+      margin-bottom: 60px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .section-label::before {
+      content: '';
+      width: 40px; height: 1px;
+      background: var(--blush);
+    }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+    .service-card {
+      padding: 50px 40px;
+      background: #f5eeea;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.4s;
+    }
+    .service-card:hover { background: var(--deep); }
+    .service-card:hover .service-name,
+    .service-card:hover .service-desc,
+    .service-card:hover .service-price { color: var(--cream); }
+    .service-card:hover .service-num { color: var(--rose); }
+    .service-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 4rem;
+      color: var(--blush);
+      line-height: 1;
+      transition: color 0.4s;
+    }
+    .service-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 300;
+      margin: 16px 0 12px;
+      transition: color 0.4s;
+    }
+    .service-desc {
+      font-size: 0.75rem;
+      line-height: 1.8;
+      color: var(--warm-grey);
+      font-weight: 300;
+      transition: color 0.4s;
+      margin-bottom: 24px;
+    }
+    .service-price {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      transition: color 0.4s;
+    }
+
+    /* Gallery Strip */
+    .gallery-strip {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.5fr;
+      gap: 3px;
+      height: 420px;
+    }
+    .gallery-cell {
+      overflow: hidden;
+      position: relative;
+    }
+    .gallery-cell-inner {
+      width: 100%; height: 100%;
+      transition: transform 0.6s ease;
+    }
+    .gallery-cell:hover .gallery-cell-inner { transform: scale(1.06); }
+    .g1 { background: linear-gradient(160deg, #e8c9bc 0%, #c9837a 100%); }
+    .g2 { background: linear-gradient(200deg, #b5614e 0%, #8c3e30 100%); }
+    .g3 { background: linear-gradient(160deg, #f0ddd5 0%, #e8c0b0 100%); }
+    .g4 { background: linear-gradient(140deg, #2b1f1a 0%, #4a3028 100%); }
+    .gallery-label {
+      position: absolute; bottom: 20px; left: 20px;
+      color: rgba(255,255,255,0.8);
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+    .gallery-nail-preview {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px;
+    }
+    .mini-nail {
+      width: 28px; height: 50px;
+      border-radius: 16px 16px 6px 6px;
+      background: rgba(255,255,255,0.3);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+
+    /* About */
+    .about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 80vh;
+    }
+    .about-visual {
+      background: var(--blush);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .about-visual::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 30px,
+        rgba(255,255,255,0.08) 30px,
+        rgba(255,255,255,0.08) 31px
+      );
+    }
+    .about-circle {
+      width: 260px; height: 260px;
+      border-radius: 50%;
+      background: var(--cream);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      z-index: 2;
+      box-shadow: 0 30px 80px rgba(43,31,26,0.15);
+    }
+    .about-circle-inner {
+      text-align: center;
+    }
+    .about-circle-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 4.5rem;
+      line-height: 1;
+      color: var(--deep);
+    }
+    .about-circle-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--warm-grey);
+    }
+    .about-content {
+      padding: 80px 80px;
+      display: flex; flex-direction: column; justify-content: center;
+      background: var(--cream);
+    }
+    .about-content h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 4vw, 4rem);
+      font-weight: 300;
+      line-height: 1.15;
+      margin-bottom: 30px;
+    }
+    .about-content h2 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+    .about-content p {
+      font-size: 0.85rem;
+      line-height: 2;
+      color: var(--warm-grey);
+      font-weight: 300;
+      max-width: 420px;
+      margin-bottom: 20px;
+    }
+    .stats-row {
+      display: flex; gap: 50px;
+      margin-top: 40px;
+      padding-top: 40px;
+      border-top: 1px solid var(--blush);
+    }
+    .stat-item {}
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.5rem;
+      line-height: 1;
+      color: var(--deep);
+    }
+    .stat-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--warm-grey);
+      margin-top: 4px;
+    }
+
+    /* Testimonials */
+    .testimonials {
+      background: var(--deep);
+      padding: 100px 60px;
+      text-align: center;
+    }
+    .testimonials .section-label {
+      justify-content: center;
+      color: var(--blush);
+    }
+    .testimonials .section-label::before { background: rgba(232,201,188,0.3); }
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .testi-card {
+      text-align: left;
+      padding: 40px;
+      border: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+    }
+    .testi-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 4rem;
+      color: var(--rose);
+      line-height: 0.5;
+      margin-bottom: 20px;
+    }
+    .testi-text {
+      font-size: 0.82rem;
+      line-height: 1.9;
+      color: rgba(250,246,241,0.7);
+      font-weight: 300;
+      margin-bottom: 28px;
+    }
+    .testi-author {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--blush);
+    }
+    .stars {
+      color: var(--rose);
+      font-size: 0.75rem;
+      margin-bottom: 16px;
+      letter-spacing: 3px;
+    }
+
+    /* Booking CTA */
+    .booking-cta {
+      padding: 140px 60px;
+      text-align: center;
+      background: var(--cream);
+      position: relative;
+      overflow: hidden;
+    }
+    .booking-cta::before {
+      content: 'BOOK';
+      position: absolute;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 30vw;
+      font-weight: 300;
+      color: rgba(232,201,188,0.15);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .booking-cta h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 5vw, 5.5rem);
+      font-weight: 300;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .booking-cta h2 em { font-style: italic; color: var(--accent); }
+    .booking-cta p {
+      font-size: 0.8rem;
+      color: var(--warm-grey);
+      margin-bottom: 50px;
+      letter-spacing: 0.05em;
+      position: relative;
+    }
+    .booking-cta a { position: relative; }
+
+    /* Footer */
+    footer {
+      background: var(--deep);
+      padding: 60px;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 60px;
+    }
+    .footer-brand .nav-logo { color: var(--cream); display: block; margin-bottom: 16px; }
+    .footer-brand p {
+      font-size: 0.75rem;
+      color: rgba(250,246,241,0.4);
+      line-height: 1.8;
+      font-weight: 300;
+      max-width: 250px;
+    }
+    .footer-col h4 {
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--blush);
+      margin-bottom: 24px;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 10px; }
+    .footer-col ul li a {
+      font-size: 0.75rem;
+      color: rgba(250,246,241,0.5);
+      text-decoration: none;
+      font-weight: 300;
+      transition: color 0.3s;
+    }
+    .footer-col ul li a:hover { color: var(--blush); }
+    .footer-bottom {
+      background: var(--deep);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 24px 60px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-bottom p {
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      color: rgba(250,246,241,0.25);
+    }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes floatUp {
+      from { opacity: 0; transform: translateX(-50%) translateY(60px); }
+      to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    @keyframes rotateBadge {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      nav { padding: 20px 24px; }
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { height: 50vh; }
+      .hero-left { padding: 100px 24px 60px; }
+      .services { padding: 80px 24px; }
+      .services-grid { grid-template-columns: 1fr; }
+      .gallery-strip { grid-template-columns: 1fr 1fr; height: auto; }
+      .gallery-cell { height: 200px; }
+      .about { grid-template-columns: 1fr; }
+      .about-content { padding: 60px 24px; }
+      .about-visual { height: 300px; }
+      .testimonials { padding: 80px 24px; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      footer { grid-template-columns: 1fr 1fr; padding: 40px 24px; }
+      .footer-bottom { padding: 20px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Custom Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- Nav -->
+  <nav>
+    <a href="#" class="nav-logo">Lunette</a>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#booking" class="nav-book">Book Now</a>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-left">
+      <p class="hero-eyebrow">Nail Atelier · Est. 2018</p>
+      <h1 class="hero-title">
+        Nails<br/>
+        as <em>Art.</em>
+      </h1>
+      <p class="hero-sub">A sanctuary of precision and beauty. Each set is a small sculpture — crafted with intention, worn with confidence.</p>
+      <div class="hero-cta">
+        <a href="#booking" class="btn-primary">Book a Session</a>
+        <a href="#gallery" class="btn-ghost">View Gallery</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-image-bg"></div>
+      <div class="hero-badge">
+        <span>Luxury<br/>Nail<br/>Studio</span>
+      </div>
+      <div class="hero-nail-art">
+        <div class="nail"></div>
+        <div class="nail"></div>
+        <div class="nail"></div>
+        <div class="nail"></div>
+        <div class="nail"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ticker -->
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <span>Gel Manicure</span><span class="ticker-dot">·</span>
+      <span>Nail Extensions</span><span class="ticker-dot">·</span>
+      <span>Nail Art</span><span class="ticker-dot">·</span>
+      <span>Pedicure</span><span class="ticker-dot">·</span>
+      <span>Chrome Finish</span><span class="ticker-dot">·</span>
+      <span>Bridal Sets</span><span class="ticker-dot">·</span>
+      <span>Gel Manicure</span><span class="ticker-dot">·</span>
+      <span>Nail Extensions</span><span class="ticker-dot">·</span>
+      <span>Nail Art</span><span class="ticker-dot">·</span>
+      <span>Pedicure</span><span class="ticker-dot">·</span>
+      <span>Chrome Finish</span><span class="ticker-dot">·</span>
+      <span>Bridal Sets</span><span class="ticker-dot">·</span>
+    </div>
+  </div>
+
+  <!-- Services -->
+  <section class="services" id="services">
+    <div class="section-label">Our Services</div>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-num">01</div>
+        <h3 class="service-name">Gel Manicure</h3>
+        <p class="service-desc">Long-lasting colour with a mirror shine. Custom shaping and cuticle care included with every appointment.</p>
+        <span class="service-price">From ₹1,200</span>
+      </div>
+      <div class="service-card">
+        <div class="service-num">02</div>
+        <h3 class="service-name">Nail Extensions</h3>
+        <p class="service-desc">Builder gel, acrylic or fibre — we sculpt your perfect length with precision and artistry.</p>
+        <span class="service-price">From ₹2,500</span>
+      </div>
+      <div class="service-card">
+        <div class="service-num">03</div>
+        <h3 class="service-name">Nail Art</h3>
+        <p class="service-desc">Bespoke designs from minimalist linework to elaborate 3D embellishments. Bring your vision.</p>
+        <span class="service-price">From ₹800</span>
+      </div>
+      <div class="service-card">
+        <div class="service-num">04</div>
+        <h3 class="service-name">Luxury Pedicure</h3>
+        <p class="service-desc">An indulgent ritual for your feet — soak, exfoliate, mask, and a flawless finish.</p>
+        <span class="service-price">From ₹1,500</span>
+      </div>
+      <div class="service-card">
+        <div class="service-num">05</div>
+        <h3 class="service-name">Chrome & Foil</h3>
+        <p class="service-desc">Mirror chrome, aurora pearl, holographic foil — statement nails that catch every light.</p>
+        <span class="service-price">From ₹600</span>
+      </div>
+      <div class="service-card">
+        <div class="service-num">06</div>
+        <h3 class="service-name">Bridal Package</h3>
+        <p class="service-desc">A curated experience for your most important day — hands, feet, and a complimentary design consultation.</p>
+        <span class="service-price">From ₹6,000</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section id="gallery">
+    <div class="gallery-strip">
+      <div class="gallery-cell">
+        <div class="gallery-cell-inner g1">
+          <div class="gallery-nail-preview">
+            <div class="mini-nail"></div>
+            <div class="mini-nail" style="height:65px;"></div>
+            <div class="mini-nail" style="height:72px;"></div>
+            <div class="mini-nail" style="height:65px;"></div>
+            <div class="mini-nail"></div>
+          </div>
+        </div>
+        <span class="gallery-label">Nude Collection</span>
+      </div>
+      <div class="gallery-cell">
+        <div class="gallery-cell-inner g2">
+          <div class="gallery-nail-preview">
+            <div class="mini-nail" style="background:rgba(255,255,255,0.4); height:60px;"></div>
+            <div class="mini-nail" style="background:rgba(255,255,255,0.2); height:72px;"></div>
+            <div class="mini-nail" style="background:rgba(255,255,255,0.4); height:60px;"></div>
+          </div>
+        </div>
+        <span class="gallery-label">Bold Reds</span>
+      </div>
+      <div class="gallery-cell">
+        <div class="gallery-cell-inner g3">
+          <div class="gallery-nail-preview">
+            <div class="mini-nail" style="background:rgba(180,100,80,0.5); width:22px; height:40px; border-radius:12px 12px 4px 4px;"></div>
+            <div class="mini-nail" style="background:rgba(180,100,80,0.7); width:22px; height:50px; border-radius:14px 14px 4px 4px;"></div>
+            <div class="mini-nail" style="background:rgba(180,100,80,0.5); width:22px; height:40px; border-radius:12px 12px 4px 4px;"></div>
+          </div>
+        </div>
+        <span class="gallery-label">Soft Glazes</span>
+      </div>
+      <div class="gallery-cell">
+        <div class="gallery-cell-inner g4">
+          <div class="gallery-nail-preview">
+            <div class="mini-nail" style="background:linear-gradient(160deg,#e8c9bc,#c9837a); width:32px; height:55px;"></div>
+            <div class="mini-nail" style="background:linear-gradient(160deg,#c9837a,#8c3e30); width:32px; height:68px;"></div>
+            <div class="mini-nail" style="background:linear-gradient(160deg,#e8c9bc,#c9837a); width:32px; height:55px;"></div>
+          </div>
+        </div>
+        <span class="gallery-label">Night Sets</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="about" id="about">
+    <div class="about-visual">
+      <div class="about-circle">
+        <div class="about-circle-inner">
+          <div class="about-circle-num">7+</div>
+          <div class="about-circle-label">Years of craft</div>
+        </div>
+      </div>
+    </div>
+    <div class="about-content">
+      <div class="section-label">Our Story</div>
+      <h2>Precision is our<br/><em>love language.</em></h2>
+      <p>Lunette was born from the belief that nail care is a form of self-expression — not a luxury, but a ritual. Our artists are trained in the finest techniques, using only premium, cruelty-free products.</p>
+      <p>Every appointment is a one-on-one experience. No rush, no assembly line. Just exceptional craft and genuine care.</p>
+      <div class="stats-row">
+        <div class="stat-item">
+          <div class="stat-num">4800+</div>
+          <div class="stat-label">Happy clients</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">120+</div>
+          <div class="stat-label">Nail art styles</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">4.9★</div>
+          <div class="stat-label">Average rating</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonials">
+    <div class="section-label">What clients say</div>
+    <div class="testimonials-grid">
+      <div class="testi-card">
+        <div class="testi-quote">"</div>
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">The attention to detail is unreal. My gel set lasted three weeks without a single chip. I've never felt so confident with my nails.</p>
+        <div class="testi-author">— Priya M., Hyderabad</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-quote">"</div>
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">I came in with a vague Pinterest board and left with something better than I imagined. The artist just got it. Truly talented.</p>
+        <div class="testi-author">— Shruti K., Banjara Hills</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-quote">"</div>
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">My bridal nails were absolutely perfect. They held up through the entire ceremony and everyone kept asking about them.</p>
+        <div class="testi-author">— Anika R., Jubilee Hills</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Booking CTA -->
+  <section class="booking-cta" id="booking">
+    <h2>Ready for your<br/><em>next set?</em></h2>
+    <p>Book your appointment online — slots fill up fast.</p>
+    <a href="mailto:hello@lunette.in" class="btn-primary">Reserve Your Spot →</a>
+  </section>
+
+  <!-- Footer -->
+  <footer id="contact">
+    <div class="footer-brand">
+      <a href="#" class="nav-logo">Lunette</a>
+      <p>A nail atelier in the heart of Hyderabad. Walk-ins welcome, appointments preferred.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#">Gel Manicure</a></li>
+        <li><a href="#">Extensions</a></li>
+        <li><a href="#">Nail Art</a></li>
+        <li><a href="#">Pedicure</a></li>
+        <li><a href="#">Bridal</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Studio</h4>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Gallery</a></li>
+        <li><a href="#">Pricing</a></li>
+        <li><a href="#">Gift Cards</a></li>
+        <li><a href="#">FAQs</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Find Us</h4>
+      <ul>
+        <li><a href="#">Banjara Hills, Hyderabad</a></li>
+        <li><a href="#">Mon–Sat 10am–8pm</a></li>
+        <li><a href="#">Sunday 11am–6pm</a></li>
+        <li><a href="tel:+919876543210">+91 98765 43210</a></li>
+        <li><a href="mailto:hello@lunette.in">hello@lunette.in</a></li>
+      </ul>
+    </div>
+  </footer>
+  <div class="footer-bottom">
+    <p>© 2025 Lunette Nail Atelier. All rights reserved.</p>
+    <p>Crafted with care · Hyderabad, India</p>
+  </div>
+
+  <script>
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+      setTimeout(() => {
+        ring.style.left = e.clientX + 'px';
+        ring.style.top = e.clientY + 'px';
+      }, 80);
+    });
+
+    document.querySelectorAll('a, button, .service-card, .nail, .gallery-cell').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.transform = 'translate(-50%, -50%) scale(2)';
+        ring.style.width = '60px';
+        ring.style.height = '60px';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+        ring.style.width = '36px';
+        ring.style.height = '36px';
+      });
+    });
+
+    // Scroll fade-in
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.service-card, .testi-card, .stat-item').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>
