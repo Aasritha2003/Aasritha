@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Collections — MAISON LUMIÈRE</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Raleway:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --cream:#F5F0E8;--ivory:#FDFBF7;--gold:#B8975A;--gold-light:#D4B07A;--charcoal:#1A1A1A;--mid:#4A4A4A;--light-gray:#E8E4DC; }
+  * { margin:0;padding:0;box-sizing:border-box; }
+  body { background:var(--ivory);color:var(--charcoal);font-family:'Raleway',sans-serif;font-weight:300;overflow-x:hidden; }
+
+  nav { position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.5rem 4rem;background:rgba(253,251,247,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(184,151,90,0.15); }
+  .nav-logo { font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;letter-spacing:0.25em;color:var(--charcoal);text-decoration:none; }
+  .nav-logo span { color:var(--gold); }
+  .nav-links { display:flex;gap:2.5rem;list-style:none; }
+  .nav-links a { text-decoration:none;color:var(--mid);font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;transition:color 0.3s; }
+  .nav-links a:hover,.nav-links a.active { color:var(--gold); }
+  .nav-icons { display:flex;gap:1.5rem;align-items:center; }
+  .nav-icons a { text-decoration:none;color:var(--mid);font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;transition:color 0.3s;position:relative; }
+  .nav-icons a:hover { color:var(--gold); }
+  .cart-badge { position:absolute;top:-8px;right:-12px;background:var(--gold);color:white;border-radius:50%;width:16px;height:16px;font-size:0.55rem;display:flex;align-items:center;justify-content:center; }
+
+  /* PAGE HERO */
+  .page-hero { padding: 10rem 4rem 4rem; background: var(--cream); border-bottom: 1px solid var(--light-gray); }
+  .breadcrumb { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--mid); margin-bottom: 1.5rem; }
+  .breadcrumb a { color: var(--gold); text-decoration: none; }
+  .breadcrumb span { margin: 0 0.5rem; }
+  .page-hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(3rem, 5vw, 5rem); font-weight: 300; }
+  .page-hero h1 em { font-style: italic; color: var(--gold); }
+  .page-hero p { font-size: 0.8rem; letter-spacing: 0.1em; color: var(--mid); margin-top: 1rem; }
+
+  /* FILTER BAR */
+  .filter-bar { padding: 1.5rem 4rem; background: var(--ivory); border-bottom: 1px solid var(--light-gray); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 72px; z-index: 50; }
+  .filter-tags { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+  .filter-tag { padding: 0.5rem 1.2rem; border: 1px solid var(--light-gray); font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; background: transparent; font-family: 'Raleway', sans-serif; color: var(--mid); }
+  .filter-tag:hover, .filter-tag.active { border-color: var(--gold); color: var(--gold); background: rgba(184,151,90,0.05); }
+  .filter-right { display: flex; gap: 2rem; align-items: center; }
+  .result-count { font-size: 0.7rem; letter-spacing: 0.1em; color: var(--mid); }
+  .sort-select { padding: 0.5rem 1rem; border: 1px solid var(--light-gray); background: transparent; font-family: 'Raleway', sans-serif; font-size: 0.7rem; letter-spacing: 0.1em; color: var(--mid); cursor: pointer; outline: none; }
+
+  /* MAIN LAYOUT */
+  .shop-layout { display: grid; grid-template-columns: 260px 1fr; min-height: calc(100vh - 200px); }
+
+  /* SIDEBAR */
+  .sidebar { padding: 3rem 2.5rem; border-right: 1px solid var(--light-gray); background: var(--ivory); }
+  .sidebar-section { margin-bottom: 2.5rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--light-gray); }
+  .sidebar-section:last-child { border-bottom: none; }
+  .sidebar-heading { font-size: 0.6rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; }
+  .sidebar-options { display: flex; flex-direction: column; gap: 0.8rem; }
+  .sidebar-opt { display: flex; align-items: center; gap: 0.8rem; cursor: pointer; }
+  .sidebar-opt input[type=checkbox] { appearance: none; width: 14px; height: 14px; border: 1px solid var(--light-gray); cursor: pointer; position: relative; transition: all 0.3s; flex-shrink: 0; }
+  .sidebar-opt input[type=checkbox]:checked { background: var(--gold); border-color: var(--gold); }
+  .sidebar-opt input[type=checkbox]:checked::after { content: '✓'; position: absolute; color: white; font-size: 0.6rem; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  .sidebar-opt label { font-size: 0.75rem; letter-spacing: 0.05em; color: var(--mid); cursor: pointer; flex: 1; }
+  .sidebar-opt .opt-count { font-size: 0.65rem; color: var(--light-gray); letter-spacing: 0; }
+  .price-range { margin-top: 1rem; }
+  .price-slider { width: 100%; -webkit-appearance: none; height: 2px; background: linear-gradient(to right, var(--gold) 60%, var(--light-gray) 60%); outline: none; cursor: pointer; }
+  .price-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--gold); cursor: pointer; box-shadow: 0 2px 8px rgba(184,151,90,0.4); }
+  .price-labels { display: flex; justify-content: space-between; margin-top: 0.8rem; font-size: 0.7rem; color: var(--mid); }
+  .color-swatches { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  .color-swatch { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; position: relative; transition: transform 0.2s; }
+  .color-swatch:hover { transform: scale(1.2); }
+  .color-swatch.selected::after { content: ''; position: absolute; inset: -3px; border: 1px solid var(--gold); border-radius: 50%; }
+
+  /* PRODUCTS GRID */
+  .products-main { padding: 3rem; }
+  .products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; }
+  .product-card { cursor: pointer; }
+  .product-img { position: relative; overflow: hidden; margin-bottom: 1.2rem; }
+  .product-img-inner { padding-top: 125%; position: relative; background: var(--cream); }
+  .product-bg { position: absolute; inset: 0; transition: transform 0.6s ease; }
+  .product-card:hover .product-bg { transform: scale(1.05); }
+  .product-actions { position: absolute; bottom: 0; left: 0; right: 0; padding: 1rem; display: flex; gap: 0.5rem; transform: translateY(100%); transition: transform 0.4s; }
+  .product-card:hover .product-actions { transform: translateY(0); }
+  .btn-add { flex:1;padding:0.8rem;background:var(--charcoal);color:white;border:none;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:background 0.3s;font-family:'Raleway',sans-serif; }
+  .btn-add:hover { background:var(--gold); }
+  .btn-wish { width:42px;background:white;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:all 0.3s; }
+  .btn-wish:hover { background:var(--gold); }
+  .product-tag { position:absolute;top:1rem;left:1rem;background:var(--gold);color:white;font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;padding:0.3rem 0.7rem; }
+  .product-tag.sale { background: #8B4444; }
+  .product-name { font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:var(--charcoal);margin-bottom:0.4rem; }
+  .product-material { font-size:0.65rem;letter-spacing:0.1em;color:var(--mid);margin-bottom:0.6rem;text-transform:uppercase; }
+  .product-price { font-size:0.9rem;color:var(--gold);letter-spacing:0.05em; }
+  .product-price s { color:var(--mid);font-size:0.8rem;margin-left:0.5rem; }
+  .product-rating { display: flex; gap: 0.2rem; margin-bottom: 0.5rem; }
+  .star { color: var(--gold); font-size: 0.7rem; }
+  .star.empty { color: var(--light-gray); }
+
+  /* PAGINATION */
+  .pagination { display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin: 4rem 0 2rem; }
+  .page-btn { width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--light-gray); background: transparent; font-family: 'Raleway', sans-serif; font-size: 0.75rem; cursor: pointer; transition: all 0.3s; color: var(--mid); text-decoration: none; }
+  .page-btn:hover, .page-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(184,151,90,0.05); }
+  .page-btn.active { background: var(--gold); color: white; border-color: var(--gold); }
+
+  /* Product backgrounds */
+  .pb1 { background: linear-gradient(135deg, #2C201A 0%, #1A1410 100%); }
+  .pb2 { background: linear-gradient(135deg, #D4C8B8 0%, #C0B0A0 100%); }
+  .pb3 { background: linear-gradient(135deg, #1E2418 0%, #141A10 100%); }
+  .pb4 { background: linear-gradient(135deg, #C8C0B8 0%, #B0A898 100%); }
+  .pb5 { background: linear-gradient(135deg, #201830 0%, #140D20 100%); }
+  .pb6 { background: linear-gradient(135deg, #E0D8C8 0%, #D0C4A8 100%); }
+  .pb7 { background: linear-gradient(135deg, #2A1818 0%, #1A0E0E 100%); }
+  .pb8 { background: linear-gradient(135deg, #1C2430 0%, #101820 100%); }
+  .pb9 { background: linear-gradient(135deg, #D8D0C0 0%, #C8B8A0 100%); }
+
+  a { color: inherit; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">MAISON <span>LUMIÈRE</span></a>
+  <ul class="nav-links">
+    <li><a href="products.html" class="active">Collections</a></li>
+    <li><a href="products.html">New Arrivals</a></li>
+    <li><a href="products.html">Sale</a></li>
+    <li><a href="#">Lookbook</a></li>
+    <li><a href="#">About</a></li>
+  </ul>
+  <div class="nav-icons">
+    <a href="#">Search</a>
+    <a href="cart.html" style="position:relative;">Cart <span class="cart-badge">2</span></a>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <p class="breadcrumb"><a href="index.html">Home</a><span>›</span>Collections</p>
+  <h1>All <em>Collections</em></h1>
+  <p>Discover 388 curated luxury pieces</p>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <div class="filter-tags">
+    <button class="filter-tag active" onclick="setFilter(this)">All</button>
+    <button class="filter-tag" onclick="setFilter(this)">Women</button>
+    <button class="filter-tag" onclick="setFilter(this)">Men</button>
+    <button class="filter-tag" onclick="setFilter(this)">Accessories</button>
+    <button class="filter-tag" onclick="setFilter(this)">New Arrivals</button>
+    <button class="filter-tag" onclick="setFilter(this)">Sale</button>
+  </div>
+  <div class="filter-right">
+    <span class="result-count">388 results</span>
+    <select class="sort-select">
+      <option>Sort: Featured</option>
+      <option>Price: Low to High</option>
+      <option>Price: High to Low</option>
+      <option>Newest First</option>
+      <option>Best Sellers</option>
+    </select>
+  </div>
+</div>
+
+<!-- SHOP LAYOUT -->
+<div class="shop-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <p class="sidebar-heading">Category</p>
+      <div class="sidebar-options">
+        <label class="sidebar-opt"><input type="checkbox" checked> <label>Dresses <span class="opt-count">42</span></label></label>
+        <label class="sidebar-opt"><input type="checkbox"> <label>Blazers & Coats <span class="opt-count">28</span></label></label>
+        <label class="sidebar-opt"><input type="checkbox"> <label>Tops & Blouses <span class="opt-count">56</span></label></label>
+        <label class="sidebar-opt"><input type="checkbox"> <label>Trousers <span class="opt-count">34</span></label></label>
+        <label class="sidebar-opt"><input type="checkbox"> <label>Skirts <span class="opt-count">22</span></label></label>
+        <label class="sidebar-opt"><input type="checkbox"> <label>Knitwear <span class="opt-count">18</span></label></label>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <p class="sidebar-heading">Price Range</p>
+      <div class="price-range">
+        <input type="range" class="price-slider" min="0" max="100000" value="60000">
+        <div class="price-labels"><span>₹0</span><span>₹60,000</span></div>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <p class="sidebar-heading">Colour</p>
+      <div class="color-swatches">
+        <div class="color-swatch selected" style="background:#1A1A1A;" title="Black"></div>
+        <div class="color-swatch" style="background:#F5F0E8;" title="Ivory" border="1px solid #ccc;"></div>
+        <div class="color-swatch" style="background:#8B6B3D;" title="Tan"></div>
+        <div class="color-swatch" style="background:#3D4A3D;" title="Forest"></div>
+        <div class="color-swatch" style="background:#4A3D5C;" title="Plum"></div>
+        <div class="color-swatch" style="background:#C0392B;" title="Red"></div>
+        <div class="color-swatch" style="background:#2C3E50;" title="Navy"></div>
+        <div class="color-swatch" style="background:#B8975A;" title="Gold"></div>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <p class="sidebar-heading">Size</p>
+      <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
+        <button style="width:40px;height:40px;border:1px solid var(--light-gray);background:none;font-size:0.7rem;cursor:pointer;font-family:'Raleway',sans-serif;color:var(--mid);">XS</button>
+        <button style="width:40px;height:40px;border:1px solid var(--gold);background:rgba(184,151,90,0.05);font-size:0.7rem;cursor:pointer;font-family:'Raleway',sans-serif;color:var(--gold);">S</button>
+        <button style="width:40px;height:40px;border:1px solid var(--light-gray);background:none;font-size:0.7rem;cursor:pointer;font-family:'Raleway',sans-serif;color:var(--mid);">M</button>
+        <button style="width:40px;height:40px;border:1px solid var(--light-gray);background:none;font-size:0.7rem;cursor:pointer;font-family:'Raleway',sans-serif;color:var(--mid);">L</button>
+        <button style="width:40px;height:40px;border:1px solid var(--light-gray);background:none;font-size:0.7rem;cursor:pointer;font-family:'Raleway',sans-serif;color:var(--mid);">XL</button>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <p class="sidebar-heading">Material</p>
+      <div class="sidebar-options">
+        <label class="sidebar-opt"><input type="checkbox"> <label>Silk</label></label>
+        <label class="sidebar-opt"><input type="checkbox" checked> <label>Cashmere</label></label>
+        <label class="sidebar-opt"><input type="checkbox"> <label>Linen</label></label>
+        <label class="sidebar-opt"><input type="checkbox"> <label>Wool</label></label>
+        <label class="sidebar-opt"><input type="checkbox"> <label>Velvet</label></label>
+        <label class="sidebar-opt"><input type="checkbox"> <label>Cotton</label></label>
+      </div>
+    </div>
+  </aside>
+
+  <!-- PRODUCTS -->
+  <main class="products-main">
+    <div class="products-grid">
+      <!-- 9 product cards -->
+      <div class="product-card" onclick="window.location='product.html'">
+        <div class="product-img"><div class="product-img-inner"><div class="product-bg pb1"></div><div class="product-tag">New</div><div class="product-actions"><button class="btn-add">Add to Cart</button><button class="btn-wish">♡</button></div></div></div>
+        <div class="product-rating"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <p class="product-name">Noir Velvet Blazer</p><p class="product-material">Italian Velvet · XS S M L</p><p class="product-price">₹24,500 <s>₹32,000</s></p>
+      </div>
+      <div class="product-card" onclick="window.location='product.html'">
+        <div class="product-img"><div class="product-img-inner"><div class="product-bg pb2"></div><div class="product-actions"><button class="btn-add">Add to Cart</button><button class="btn-wish">♡</button></div></div></div>
+        <div class="product-rating"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span></div>
+        <p class="product-name">Cashmere Draped Coat</p><p class="product-material">Pure Cashmere · S M L XL</p><p class="product-price">₹38,900</p>
+      </div>
+      <div class="product-card" onclick="window.location='product.html'">
+        <div class="product-img"><div class="product-img-inner"><div class="product-bg pb3"></div><div class="product-tag sale">Sale</div><div class="product-actions"><button class="btn-add">Add to Cart</button><button class="btn-wish">♡</button></div></div></div>
+        <div class="product-rating"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <p class="product-name">Silk Wrap Dress</p><p class="product-material">Mulberry Silk · XS S M</p><p class="product-price">₹18,200 <s>₹26,000</s></p>
+      </div>
+      <div class="product-card" onclick="window.location='product.html'">
+        <div class="product-img"><div class="product-img-inner"><div class="product-bg pb4"></div><div class="product-actions"><button class="btn-add">Add to Cart</button><button class="btn-wish">♡</button></div></div></div>
+        <div class="product-rating"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <p class="product-name">Linen Tailored Suit</p><p class="product-material">Belgian Linen · S M L XL</p><p class="product-price">₹42,000</p>
+      </div>
+      <div class="product-card" onclick="window.location='product.html'">
+        <div class="product-img"><div class="product-img-inner"><div class="product-bg pb5"></div><div class="product-tag">New</div><div class="product-actions"><button class="btn-add">Add to Cart</button><button class="btn-wish">♡</button></div></div></div>
+        <div class="product-rating"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span></div>
+        <p class="product-name">Plum Silk Midi Dress</p><p class="product-material">Pure Silk · XS S M L</p><p class="product-price">₹29,500</p>
+      </div>
+      <div class="product-card" onclick="window.location='product.html'">
+        <div class="product-img"><div class="product-img-inner"><div class="product-bg pb6"></div><div class="product-actions"><button class="btn-add">Add to Cart</button><button class="btn-wish">♡</button></div></div></div>
+        <div class="product-rating"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <p class="product-name">Ivory Wool Cardigan</p><p class="product-material">Merino Wool · XS S M L XL</p><p class="product-price">₹14,800</p>
+      </div>
+      <div class="product-card" onclick="window.location='product.html'">
+        <div class="product-img"><div class="product-img-inner"><div class="product-bg pb7"></div><div class="product-tag sale">Sale</div><div class="product-actions"><button class="btn-add">Add to Cart</button><button class="btn-wish">♡</button></div></div></div>
+        <div class="product-rating"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <p class="product-name">Oxblood Leather Jacket</p><p class="product-material">Full-Grain Leather · S M L</p><p class="product-price">₹52,000 <s>₹68,000</s></p>
+      </div>
+      <div class="product-card" onclick="window.location='product.html'">
+        <div class="product-img"><div class="product-img-inner"><div class="product-bg pb8"></div><div class="product-tag">New</div><div class="product-actions"><button class="btn-add">Add to Cart</button><button class="btn-wish">♡</button></div></div></div>
+        <div class="product-rating"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span></div>
+        <p class="product-name">Navy Pinstripe Trousers</p><p class="product-material">Wool Blend · 28 30 32 34</p><p class="product-price">₹16,400</p>
+      </div>
+      <div class="product-card" onclick="window.location='product.html'">
+        <div class="product-img"><div class="product-img-inner"><div class="product-bg pb9"></div><div class="product-actions"><button class="btn-add">Add to Cart</button><button class="btn-wish">♡</button></div></div></div>
+        <div class="product-rating"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <p class="product-name">Sand Linen Co-ord Set</p><p class="product-material">100% Linen · XS S M L</p><p class="product-price">₹21,800</p>
+      </div>
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="pagination">
+      <a href="#" class="page-btn">‹</a>
+      <a href="#" class="page-btn active">1</a>
+      <a href="#" class="page-btn">2</a>
+      <a href="#" class="page-btn">3</a>
+      <span style="color:var(--mid);font-size:0.8rem;">...</span>
+      <a href="#" class="page-btn">12</a>
+      <a href="#" class="page-btn">›</a>
+    </div>
+  </main>
+</div>
+
+<script>
+  function setFilter(el) {
+    document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+</script>
+</body>
+</html>
