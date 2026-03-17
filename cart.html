@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Cart — MAISON LUMIÈRE</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Raleway:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --cream:#F5F0E8;--ivory:#FDFBF7;--gold:#B8975A;--gold-light:#D4B07A;--charcoal:#1A1A1A;--mid:#4A4A4A;--light-gray:#E8E4DC; }
+  * { margin:0;padding:0;box-sizing:border-box; }
+  body { background:var(--ivory);color:var(--charcoal);font-family:'Raleway',sans-serif;font-weight:300;overflow-x:hidden; }
+
+  nav { position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.5rem 4rem;background:rgba(253,251,247,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(184,151,90,0.15); }
+  .nav-logo { font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;letter-spacing:0.25em;color:var(--charcoal);text-decoration:none; }
+  .nav-logo span { color:var(--gold); }
+  .nav-links { display:flex;gap:2.5rem;list-style:none; }
+  .nav-links a { text-decoration:none;color:var(--mid);font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;transition:color 0.3s; }
+  .nav-links a:hover { color:var(--gold); }
+  .nav-icons { display:flex;gap:1.5rem;align-items:center; }
+  .nav-icons a { text-decoration:none;color:var(--mid);font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;transition:color 0.3s;position:relative; }
+  .nav-icons a:hover { color:var(--gold); }
+  .cart-badge { position:absolute;top:-8px;right:-12px;background:var(--gold);color:white;border-radius:50%;width:16px;height:16px;font-size:0.55rem;display:flex;align-items:center;justify-content:center; }
+
+  /* PAGE */
+  .cart-page { padding: 8rem 4rem 6rem; max-width: 1400px; margin: 0 auto; }
+  .page-header { margin-bottom: 3rem; }
+  .breadcrumb { font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);margin-bottom:1rem; }
+  .breadcrumb a { color:var(--gold);text-decoration:none; }
+  .breadcrumb span { margin:0 0.5rem; }
+  .page-title { font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,4vw,4rem);font-weight:300; }
+  .page-title em { font-style:italic;color:var(--gold); }
+  .page-title span { font-size:1rem;font-weight:300;color:var(--mid);font-family:'Raleway',sans-serif;margin-left:1rem;vertical-align:middle; }
+
+  /* CHECKOUT STEPS */
+  .checkout-steps { display:flex;align-items:center;gap:0;margin-bottom:3rem;border-bottom:1px solid var(--light-gray);padding-bottom:2rem; }
+  .step { display:flex;align-items:center;gap:0.8rem;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase; }
+  .step-num { width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem; }
+  .step.active .step-num { background:var(--gold);color:white; }
+  .step.done .step-num { background:var(--charcoal);color:white; }
+  .step.pending .step-num { border:1px solid var(--light-gray);color:var(--mid); }
+  .step.active { color:var(--charcoal); }
+  .step.pending { color:var(--mid); }
+  .step-line { flex:1;height:1px;background:var(--light-gray);margin:0 1.5rem;max-width:80px; }
+  .step-line.done { background:var(--gold); }
+
+  /* LAYOUT */
+  .cart-layout { display:grid;grid-template-columns:1fr 400px;gap:4rem;align-items:start; }
+
+  /* CART ITEMS */
+  .cart-items { }
+  .cart-header-row { display:grid;grid-template-columns:1fr 120px 140px 80px;gap:1rem;padding:0 0 1rem;border-bottom:1px solid var(--light-gray);margin-bottom:0; }
+  .col-head { font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--mid); }
+
+  .cart-item { display:grid;grid-template-columns:1fr 120px 140px 80px;gap:1rem;padding:2rem 0;border-bottom:1px solid var(--light-gray);align-items:center; }
+  .item-product { display:flex;gap:1.5rem;align-items:flex-start; }
+  .item-img { width:90px;height:110px;flex-shrink:0;overflow:hidden; }
+  .item-img div { width:100%;height:100%; }
+  .item-details { flex:1; }
+  .item-brand { font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem; }
+  .item-name { font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;margin-bottom:0.5rem; }
+  .item-meta { font-size:0.65rem;letter-spacing:0.1em;color:var(--mid);line-height:1.8; }
+  .item-remove { font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid);cursor:pointer;text-decoration:underline;margin-top:0.8rem;display:inline-block;transition:color 0.3s; }
+  .item-remove:hover { color:#8B4444; }
+  .item-price-col { font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--charcoal); }
+  .item-qty { display:flex;align-items:center;border:1px solid var(--light-gray);width:fit-content; }
+  .qty-btn { width:36px;height:40px;border:none;background:transparent;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s; }
+  .qty-btn:hover { background:var(--cream); }
+  .qty-val { width:40px;text-align:center;font-size:0.85rem; }
+  .item-total { font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--charcoal); }
+
+  /* PROMO */
+  .promo-section { margin: 2rem 0; padding: 2rem; background: var(--cream); }
+  .promo-label { font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--charcoal);margin-bottom:1rem; }
+  .promo-row { display:flex;gap:0; }
+  .promo-input { flex:1;padding:0.9rem 1.2rem;border:1px solid var(--light-gray);background:white;font-family:'Raleway',sans-serif;font-size:0.75rem;letter-spacing:0.1em;color:var(--charcoal);outline:none;transition:border-color 0.3s; }
+  .promo-input:focus { border-color:var(--gold); }
+  .promo-btn { padding:0.9rem 1.8rem;background:var(--charcoal);color:white;border:none;font-family:'Raleway',sans-serif;font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:background 0.3s; }
+  .promo-btn:hover { background:var(--gold); }
+  .promo-success { font-size:0.7rem;color:#3D7A3D;margin-top:0.8rem;letter-spacing:0.05em;display:none; }
+
+  /* CONTINUE */
+  .continue-link { display:inline-flex;align-items:center;gap:0.5rem;text-decoration:none;color:var(--mid);font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;margin-top:1.5rem;transition:color 0.3s; }
+  .continue-link:hover { color:var(--gold); }
+
+  /* ORDER SUMMARY */
+  .order-summary { background:var(--cream);padding:2.5rem;position:sticky;top:100px; }
+  .summary-title { font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;margin-bottom:2rem; }
+  .summary-row { display:flex;justify-content:space-between;align-items:center;padding:0.8rem 0;border-bottom:1px solid var(--light-gray);font-size:0.8rem; }
+  .summary-row:last-of-type { border-bottom:none; }
+  .summary-label { color:var(--mid);letter-spacing:0.05em; }
+  .summary-value { color:var(--charcoal); }
+  .summary-value.free { color:#3D7A3D; }
+  .summary-value.discount { color:#8B4444; }
+  .summary-divider { height:1px;background:var(--charcoal);margin:1rem 0; }
+  .summary-total { display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2rem; }
+  .total-label { font-size:0.7rem;letter-spacing:0.25em;text-transform:uppercase; }
+  .total-value { font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:var(--charcoal); }
+  .btn-checkout { display:block;width:100%;padding:1.3rem;background:var(--charcoal);color:white;border:none;font-family:'Raleway',sans-serif;font-size:0.75rem;letter-spacing:0.3em;text-transform:uppercase;cursor:pointer;transition:all 0.4s;text-align:center;text-decoration:none;position:relative;overflow:hidden;margin-bottom:1rem; }
+  .btn-checkout::before { content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:var(--gold);transition:left 0.4s; }
+  .btn-checkout:hover::before { left:0; }
+  .btn-checkout span { position:relative;z-index:1; }
+  .pay-methods { display:flex;justify-content:center;gap:0.6rem;margin-top:1.2rem; }
+  .pay-badge { font-size:0.55rem;letter-spacing:0.1em;border:1px solid var(--light-gray);padding:0.3rem 0.6rem;border-radius:3px;color:var(--mid); }
+  .summary-guarantee { text-align:center;margin-top:1.5rem;font-size:0.65rem;color:var(--mid);line-height:1.8;letter-spacing:0.05em; }
+
+  /* RECOMMENDED */
+  .you-may-like { margin-top: 4rem; padding-top: 4rem; border-top: 1px solid var(--light-gray); }
+  .you-may-like h3 { font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;margin-bottom:2rem; }
+  .rec-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem; }
+  .rec-card { cursor:pointer; }
+  .rec-img { padding-top:120%;position:relative;overflow:hidden;margin-bottom:0.8rem; }
+  .rec-bg { position:absolute;inset:0;transition:transform 0.5s; }
+  .rec-card:hover .rec-bg { transform:scale(1.05); }
+  .rec-name { font-family:'Cormorant Garamond',serif;font-size:1rem;margin-bottom:0.3rem; }
+  .rec-price { font-size:0.8rem;color:var(--gold); }
+
+  a { color:inherit; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">MAISON <span>LUMIÈRE</span></a>
+  <ul class="nav-links">
+    <li><a href="products.html">Collections</a></li>
+    <li><a href="products.html">New Arrivals</a></li>
+    <li><a href="products.html">Sale</a></li>
+    <li><a href="#">Lookbook</a></li>
+    <li><a href="#">About</a></li>
+  </ul>
+  <div class="nav-icons">
+    <a href="#">Search</a>
+    <a href="cart.html" style="position:relative;">Cart <span class="cart-badge" id="cartCount">2</span></a>
+  </div>
+</nav>
+
+<div class="cart-page">
+  <div class="page-header">
+    <p class="breadcrumb"><a href="index.html">Home</a><span>›</span>Shopping Cart</p>
+    <h1 class="page-title">Your <em>Cart</em> <span id="itemCount">2 items</span></h1>
+  </div>
+
+  <!-- STEPS -->
+  <div class="checkout-steps">
+    <div class="step active"><div class="step-num">1</div>Cart</div>
+    <div class="step-line"></div>
+    <div class="step pending"><div class="step-num">2</div>Details</div>
+    <div class="step-line"></div>
+    <div class="step pending"><div class="step-num">3</div>Payment</div>
+    <div class="step-line"></div>
+    <div class="step pending"><div class="step-num">4</div>Confirm</div>
+  </div>
+
+  <div class="cart-layout">
+    <!-- ITEMS -->
+    <div class="cart-items">
+      <div class="cart-header-row">
+        <div class="col-head">Product</div>
+        <div class="col-head">Price</div>
+        <div class="col-head">Quantity</div>
+        <div class="col-head" style="text-align:right;">Total</div>
+      </div>
+
+      <!-- Item 1 -->
+      <div class="cart-item" id="item1">
+        <div class="item-product">
+          <div class="item-img"><div style="background:linear-gradient(135deg,#2C201A,#1A1410);width:100%;height:100%;"></div></div>
+          <div class="item-details">
+            <p class="item-brand">Maison Lumière</p>
+            <p class="item-name">Noir Velvet Blazer</p>
+            <p class="item-meta">Colour: Midnight Black<br>Size: M<br>Material: Italian Velvet</p>
+            <span class="item-remove" onclick="removeItem('item1')">Remove</span>
+          </div>
+        </div>
+        <div class="item-price-col">₹24,500</div>
+        <div class="item-qty">
+          <button class="qty-btn" onclick="updateQty('q1', -1)">−</button>
+          <span class="qty-val" id="q1">1</span>
+          <button class="qty-btn" onclick="updateQty('q1', 1)">+</button>
+        </div>
+        <div class="item-total" id="t1">₹24,500</div>
+      </div>
+
+      <!-- Item 2 -->
+      <div class="cart-item" id="item2">
+        <div class="item-product">
+          <div class="item-img"><div style="background:linear-gradient(135deg,#D4C8B8,#C0B0A0);width:100%;height:100%;"></div></div>
+          <div class="item-details">
+            <p class="item-brand">Maison Lumière</p>
+            <p class="item-name">Cashmere Draped Coat</p>
+            <p class="item-meta">Colour: Ivory Sand<br>Size: S<br>Material: Pure Cashmere</p>
+            <span class="item-remove" onclick="removeItem('item2')">Remove</span>
+          </div>
+        </div>
+        <div class="item-price-col">₹38,900</div>
+        <div class="item-qty">
+          <button class="qty-btn" onclick="updateQty('q2', -1)">−</button>
+          <span class="qty-val" id="q2">1</span>
+          <button class="qty-btn" onclick="updateQty('q2', 1)">+</button>
+        </div>
+        <div class="item-total" id="t2">₹38,900</div>
+      </div>
+
+      <!-- PROMO -->
+      <div class="promo-section">
+        <p class="promo-label">Promo Code / Gift Card</p>
+        <div class="promo-row">
+          <input class="promo-input" id="promoInput" type="text" placeholder="Enter code (try: LUMIERE10)">
+          <button class="promo-btn" onclick="applyPromo()">Apply</button>
+        </div>
+        <p class="promo-success" id="promoSuccess">✓ Promo code applied — 10% discount added!</p>
+      </div>
+
+      <a href="products.html" class="continue-link">← Continue Shopping</a>
+
+      <!-- YOU MAY LIKE -->
+      <div class="you-may-like">
+        <h3>You May Also <em>Like</em></h3>
+        <div class="rec-grid">
+          <div class="rec-card" onclick="window.location='product.html'">
+            <div class="rec-img"><div class="rec-bg" style="background:linear-gradient(135deg,#1E2418,#141A10)"></div></div>
+            <p class="rec-name">Silk Wrap Dress</p><p class="rec-price">₹18,200</p>
+          </div>
+          <div class="rec-card" onclick="window.location='product.html'">
+            <div class="rec-img"><div class="rec-bg" style="background:linear-gradient(135deg,#201830,#140D20)"></div></div>
+            <p class="rec-name">Plum Midi Skirt</p><p class="rec-price">₹12,800</p>
+          </div>
+          <div class="rec-card" onclick="window.location='product.html'">
+            <div class="rec-img"><div class="rec-bg" style="background:linear-gradient(135deg,#C8C0B8,#B0A898)"></div></div>
+            <p class="rec-name">Pearl Drop Earrings</p><p class="rec-price">₹12,500</p>
+          </div>
+          <div class="rec-card" onclick="window.location='product.html'">
+            <div class="rec-img"><div class="rec-bg" style="background:linear-gradient(135deg,#2A1818,#1A0E0E)"></div></div>
+            <p class="rec-name">Leather Belt — Gold</p><p class="rec-price">₹6,800</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORDER SUMMARY -->
+    <aside class="order-summary">
+      <h2 class="summary-title">Order Summary</h2>
+      <div class="summary-row"><span class="summary-label">Subtotal (2 items)</span><span class="summary-value" id="subtotal">₹63,400</span></div>
+      <div class="summary-row"><span class="summary-label">Discount (SS25)</span><span class="summary-value discount" id="discount">− ₹7,500</span></div>
+      <div class="summary-row"><span class="summary-label">Shipping</span><span class="summary-value free">Free</span></div>
+      <div class="summary-row"><span class="summary-label">GST (18%)</span><span class="summary-value" id="gst">₹10,062</span></div>
+      <div class="summary-divider"></div>
+      <div class="summary-total">
+        <span class="total-label">Total</span>
+        <span class="total-value" id="total">₹65,962</span>
+      </div>
+      <a href="checkout.html" class="btn-checkout"><span>Proceed to Checkout →</span></a>
+      <div class="pay-methods">
+        <span class="pay-badge">VISA</span>
+        <span class="pay-badge">MC</span>
+        <span class="pay-badge">UPI</span>
+        <span class="pay-badge">EMI</span>
+        <span class="pay-badge">COD</span>
+      </div>
+      <p class="summary-guarantee">🔒 Secure checkout · SSL encrypted<br>Free returns within 30 days</p>
+    </aside>
+  </div>
+</div>
+
+<script>
+  const prices = { q1: 24500, q2: 38900 };
+  const qtys = { q1: 1, q2: 1 };
+
+  function updateQty(id, d) {
+    qtys[id] = Math.max(1, qtys[id] + d);
+    document.getElementById(id).textContent = qtys[id];
+    const item = id === 'q1' ? 't1' : 't2';
+    document.getElementById(item).textContent = '₹' + (prices[id] * qtys[id]).toLocaleString('en-IN');
+    recalc();
+  }
+
+  function recalc() {
+    const sub = prices.q1 * qtys.q1 + prices.q2 * qtys.q2;
+    const gst = Math.round(sub * 0.18);
+    const total = sub - 7500 + gst;
+    document.getElementById('subtotal').textContent = '₹' + sub.toLocaleString('en-IN');
+    document.getElementById('gst').textContent = '₹' + gst.toLocaleString('en-IN');
+    document.getElementById('total').textContent = '₹' + total.toLocaleString('en-IN');
+  }
+
+  function removeItem(id) {
+    const el = document.getElementById(id);
+    el.style.opacity = '0';
+    el.style.transform = 'translateX(-20px)';
+    el.style.transition = 'all 0.4s';
+    setTimeout(() => { el.remove(); recalc(); }, 400);
+  }
+
+  function applyPromo() {
+    const code = document.getElementById('promoInput').value.trim().toUpperCase();
+    const success = document.getElementById('promoSuccess');
+    if (code === 'LUMIERE10') {
+      success.style.display = 'block';
+    } else {
+      success.style.display = 'none';
+      alert('Invalid promo code. Try LUMIERE10');
+    }
+  }
+</script>
+</body>
+</html>
